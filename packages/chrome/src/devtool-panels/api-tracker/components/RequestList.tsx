@@ -107,16 +107,6 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
     },
   ];
 
-  if (requests.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Typography variant="small" className="text-muted-foreground">
-          No requests found
-        </Typography>
-      </div>
-    );
-  }
-
   return <DataTable columns={columns} data={requests} />;
 };
 
