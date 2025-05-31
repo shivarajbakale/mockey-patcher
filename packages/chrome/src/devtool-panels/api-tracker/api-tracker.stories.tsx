@@ -31,7 +31,7 @@ export const RequestListStory: StoryObj<typeof RequestList> = {
     return (
       <div>
         <Button onClick={() => setEmpty(!empty)}>Empty Requests</Button>
-        <div className="w-full">
+        <div>
           <RequestList requests={empty ? [] : requests} />
         </div>
       </div>

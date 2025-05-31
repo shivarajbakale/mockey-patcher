@@ -35,10 +35,7 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
                     Duration: {formatDuration(request.duration)}
                   </Badge>
                 </Typography>
-                <Typography
-                  variant="small"
-                  className="text-muted-foreground whitespace-nowrap"
-                >
+                <Typography variant="small" className="text-muted-foreground">
                   <Badge variant="outline">
                     Size: {formatBytes(request.numberOfBytes)}
                   </Badge>
@@ -47,7 +44,7 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
             </div>
             <Typography
               variant="small"
-              className="text-muted-foreground truncate w-[200px]"
+              className="text-muted-foreground break-all"
               title={url.pathname}
             >
               {url.origin + url.pathname}

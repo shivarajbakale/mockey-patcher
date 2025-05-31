@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Main } from "./components/main";
-import { Button } from "@/components/atoms/button/button";
 
 export interface RequestMetadata {
   url: string;
@@ -31,7 +30,6 @@ const APITracker = () => {
             const url = new URL(request.request.url);
             const pathname = url.origin + url.pathname;
             const postData = request?.request?.postData;
-            console.log("This is the request data ", request);
             request.getContent((content) => {
               const requestMetadata: RequestMetadata = {
                 url: pathname,
@@ -69,10 +67,7 @@ const APITracker = () => {
   }, []);
 
   return (
-    <div className="p-4 bg-background">
-      <Button onClick={() => console.log(JSON.stringify(requests))}>
-        Print Requests to Console
-      </Button>
+    <div className="p-4 bg-background h-[100vh]">
       <Main
         requests={requests}
         error={error}
