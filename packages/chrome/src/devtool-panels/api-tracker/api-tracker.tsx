@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '@/components/atoms/button/button';
-import { Card } from '@/components/atoms/card/card';
-import { Typography } from '@/components/atoms/typography/typography';
 import { createRoot } from 'react-dom/client';
+import { Main } from './components/main';
 
 interface RequestMetadata {
   url: string;
@@ -60,58 +58,9 @@ const APITracker = () => {
     }
   }, []);
 
-  const clearRequests = () => {
-    setAllRequests([]);
-    setError(null);
-  };
-
   return (
     <div className="p-4 bg-background">
-      <Card className="p-4">
-        <div className="flex justify-between items-center mb-4">
-          <Typography variant="h4">API Request Tracker</Typography>
-          <div className="space-x-2">
-            <Button
-              onClick={() => {
-                console.log(JSON.stringify(allRequests, null, 2));
-              }}
-              variant="outline"
-              size="sm"
-            >
-              Print Requests
-            </Button>
-            <Button onClick={clearRequests} variant="outline" size="sm">
-              Clear
-            </Button>
-          </div>
-        </div>
-
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        <div className="space-y-2">
-          {allRequests.map(request => (
-            <Card key={request.id} className="p-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <Typography className="font-medium">
-                    {request.method} {request.url}
-                  </Typography>
-                  <Typography variant="small" className="text-muted-foreground">
-                    Status: {request.status} • Duration: {request.duration.toFixed(2)}ms
-                  </Typography>
-                </div>
-                <Typography variant="small" className="text-muted-foreground">
-                  {(request.numberOfBytes / 1024).toFixed(2)} KB
-                </Typography>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </Card>
+      <Main />
     </div>
   );
 };
