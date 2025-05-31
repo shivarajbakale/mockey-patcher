@@ -37,7 +37,7 @@ const Main: React.FC<MainProps> = ({
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <Typography variant="h4">JSON D&apos;Rule Oh</Typography>
+        <Typography variant="h4">Mocky Balboa</Typography>
       </div>
       <div className="flex gap-2">
         <Button variant="outline" size="sm" onClick={onRefreshPlugin}>
