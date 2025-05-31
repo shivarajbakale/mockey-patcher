@@ -14,6 +14,30 @@ interface RequestListProps {
 export const RequestList = ({ requests = [] }: RequestListProps) => {
   const columns: ColumnDef<RequestMetadata>[] = [
     {
+      accessorKey: "numberOfBytes",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Data Transferred" />
+      ),
+      cell: ({ row }) => {
+        const numberOfBytes = row.getValue("numberOfBytes") as number;
+        return (
+          <div className="font-medium text-right">
+            {formatBytes(numberOfBytes)}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "duration",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Duration" />
+      ),
+      cell: ({ row }) => {
+        const duration = row.getValue("duration") as number;
+        return <div className="font-medium">{formatDuration(duration)}</div>;
+      },
+    },
+    {
       accessorKey: "method",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Method" />
@@ -45,30 +69,6 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
         return (
           <div className={`font-medium ${getStatusColor(status)}`}>
             {status}
-          </div>
-        );
-      },
-    },
-    {
-      accessorKey: "duration",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Duration" />
-      ),
-      cell: ({ row }) => {
-        const duration = row.getValue("duration") as number;
-        return <div className="font-medium">{formatDuration(duration)}</div>;
-      },
-    },
-    {
-      accessorKey: "numberOfBytes",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Data Transferred" />
-      ),
-      cell: ({ row }) => {
-        const numberOfBytes = row.getValue("numberOfBytes") as number;
-        return (
-          <div className="font-medium text-right">
-            {formatBytes(numberOfBytes)}
           </div>
         );
       },

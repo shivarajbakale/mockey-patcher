@@ -23,7 +23,7 @@ const Main: React.FC<MainProps> = ({ requests }) => {
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <Typography variant="h4">API Request Tracker</Typography>
+        <Typography variant="h4">JSON D&apos;Rule Oh</Typography>
       </div>
       <div className="scroll-container">
         <RequestList requests={requests} />
