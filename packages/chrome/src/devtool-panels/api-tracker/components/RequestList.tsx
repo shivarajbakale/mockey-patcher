@@ -6,6 +6,7 @@ import { DataTableColumnHeader } from "@/components/atoms/data-table/data-table-
 import { Typography } from "@/components/atoms/typography/typography";
 import type { RequestMetadata } from "./main";
 import { formatBytes, formatDuration, getMethodColor } from "../utils";
+import { Checkbox } from "@/components/atoms/checkbox/checkbox";
 
 interface RequestListProps {
   requests: RequestMetadata[];
@@ -13,6 +14,25 @@ interface RequestListProps {
 
 export const RequestList = ({ requests = [] }: RequestListProps) => {
   const columns: ColumnDef<RequestMetadata>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected()}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
     {
       accessorKey: "numberOfBytes",
       header: ({ column }) => (
@@ -44,11 +64,15 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
       ),
       cell: ({ row }) => (
         <div
-          className={`font-medium rounded-lg w-1 ${getMethodColor(row.getValue("method"))}`}
+          className={`font-medium rounded-lg w-1 ${getMethodColor(
+            row.getValue("method"),
+          )}`}
         >
           {row.getValue("method")}
         </div>
       ),
+      enableSorting: false,
+      enableResizing: false,
     },
     {
       accessorKey: "url",

@@ -30,12 +30,20 @@ const Main: React.FC<MainProps> = ({
   onClearRequests,
   onRefreshRequests,
 }) => {
+  const onRefreshPlugin = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <Typography variant="h4">JSON D&apos;Rule Oh</Typography>
       </div>
       <div className="flex gap-2">
+        <Button variant="outline" size="sm" onClick={onRefreshPlugin}>
+          <RefreshCcwIcon className="w-4 h-4" />
+          Refresh Plugin
+        </Button>
         <Button variant="outline" size="sm" onClick={onRefreshRequests}>
           <RefreshCcwIcon className="w-4 h-4" />
           Refresh
