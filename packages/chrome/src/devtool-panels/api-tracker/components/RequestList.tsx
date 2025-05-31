@@ -61,24 +61,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
       size: 100,
       enableHiding: false,
     },
-    {
-      accessorKey: "method",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Method" />
-      ),
-      cell: ({ row }) => (
-        <div
-          className={`font-medium rounded-lg w-1 ${getMethodColor(
-            row.getValue("method"),
-          )}`}
-        >
-          {row.getValue("method")}
-        </div>
-      ),
-      enableSorting: false,
-      enableResizing: false,
-      size: 80,
-    },
+
     {
       accessorKey: "url",
       header: ({ column }) => (
@@ -101,6 +84,24 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
           </div>
         );
       },
+      size: 80,
+    },
+    {
+      accessorKey: "method",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Method" />
+      ),
+      cell: ({ row }) => (
+        <div
+          className={`font-medium rounded-lg w-1 ${getMethodColor(
+            row.getValue("method"),
+          )}`}
+        >
+          {row.getValue("method")}
+        </div>
+      ),
+      enableSorting: false,
+      enableResizing: false,
       size: 80,
     },
   ];
