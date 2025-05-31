@@ -29,12 +29,12 @@ const APITracker = () => {
         ) {
           try {
             const url = new URL(request.request.url);
-            const pathname = url.pathname;
+            const pathname = url.origin + url.pathname;
             const postData = request?.request?.postData;
             console.log("This is the request data ", request);
             request.getContent((content) => {
               const requestMetadata: RequestMetadata = {
-                url: request.request.url,
+                url: pathname,
                 method: request.request.method,
                 status: request.response.status,
                 duration: request.time,
