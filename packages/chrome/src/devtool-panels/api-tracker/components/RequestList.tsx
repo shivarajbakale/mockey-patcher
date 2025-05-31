@@ -59,6 +59,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
         return <div className="font-medium">{formatDuration(duration)}</div>;
       },
       size: 100,
+      enableHiding: false,
     },
     {
       accessorKey: "method",
