@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { RequestList } from "./components/RequestList";
 import data from "./data.json";
 import { Button } from "@/components/atoms/button/button";
+import { Analytics } from "./components/Analytics";
 
 const meta: Meta<typeof Main> = {
   title: "Devtools/APITracker",
@@ -32,6 +33,7 @@ export const RequestListStory: StoryObj<typeof RequestList> = {
       <div>
         <Button onClick={() => setEmpty(!empty)}>Empty Requests</Button>
         <div>
+          <Analytics requests={empty ? [] : requests} />
           <RequestList requests={empty ? [] : requests} />
         </div>
       </div>
