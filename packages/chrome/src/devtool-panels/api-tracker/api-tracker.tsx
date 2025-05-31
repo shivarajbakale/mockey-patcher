@@ -66,12 +66,20 @@ const APITracker = () => {
     }
   }, []);
 
+  const onRefreshRequests = () => {
+    window.location.reload();
+  };
+  const onClearRequests = () => {
+    setRequests([]);
+  };
+
   return (
     <div className="p-4 bg-background h-[100vh]">
       <Main
         requests={requests}
         error={error}
-        onClearRequests={() => setRequests([])}
+        onClearRequests={onClearRequests}
+        onRefreshRequests={onRefreshRequests}
       />
     </div>
   );

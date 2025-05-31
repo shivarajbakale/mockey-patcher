@@ -16,9 +16,12 @@ const Analytics = ({ requests }: { requests: RequestMetadata[] }) => {
     0,
   );
   return (
-    <Card className="p-4 my-4">
+    <Card className="p-4 my-4 w-full">
       <Typography variant="h4">Analytics</Typography>
-      <div className="flex justify-between items-center">
+      <div
+        className="flex justify-between items-center mt-2
+      "
+      >
         <div className="flex items-center">
           <span className="text-muted-foreground flex items-center">
             <ChartBarIcon className="w-4 h-4 mr-2" />
