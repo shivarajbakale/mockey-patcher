@@ -32,11 +32,12 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
       ),
       enableSorting: false,
       enableHiding: false,
+      size: 40,
     },
     {
       accessorKey: "numberOfBytes",
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Data Transferred" />
+        <DataTableColumnHeader column={column} title="Bytes" />
       ),
       cell: ({ row }) => {
         const numberOfBytes = row.getValue("numberOfBytes") as number;
@@ -46,6 +47,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
           </div>
         );
       },
+      size: 20,
     },
     {
       accessorKey: "duration",
@@ -56,6 +58,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
         const duration = row.getValue("duration") as number;
         return <div className="font-medium">{formatDuration(duration)}</div>;
       },
+      size: 100,
     },
     {
       accessorKey: "method",
@@ -73,6 +76,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
       ),
       enableSorting: false,
       enableResizing: false,
+      size: 80,
     },
     {
       accessorKey: "url",
@@ -96,6 +100,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
           </div>
         );
       },
+      size: 80,
     },
   ];
 

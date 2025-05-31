@@ -42,11 +42,11 @@ const Main: React.FC<MainProps> = ({
       <div className="flex gap-2">
         <Button variant="outline" size="sm" onClick={onRefreshPlugin}>
           <RefreshCcwIcon className="w-4 h-4" />
-          Refresh Plugin
+          Refresh
         </Button>
         <Button variant="outline" size="sm" onClick={onRefreshRequests}>
           <RefreshCcwIcon className="w-4 h-4" />
-          Refresh
+          Recalculate
         </Button>
         <Button variant="outline" size="sm" onClick={onClearRequests}>
           <TrashIcon className="w-4 h-4" />
