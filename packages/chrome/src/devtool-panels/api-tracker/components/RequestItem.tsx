@@ -52,7 +52,6 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
           </Typography>
         </div>
 
-        {/* Request/Response Preview */}
         <div className="grid grid-cols-2 gap-4 text-sm">
           <div>
             <Typography variant="small" className="font-medium mb-1">
