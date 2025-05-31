@@ -1,24 +1,62 @@
-import React from "react";
-import { Button } from "@/components/atoms/button/button";
-import { ThemeProvider } from "@/components/utils/theme-provider";
-import { useThemeStore } from "@/store/theme/theme-store";
+import React, { useState } from 'react';
+import { Card } from '@/components/atoms/card/card';
+import { Typography } from '@/components/atoms/typography/typography';
+import { Controls } from './components/Controls';
+import { Filters } from './components/Filters';
+import type { FilterCriteria } from './components/Filters';
+import { Stats } from './components/Stats';
+import { RequestList } from './components/RequestList';
 
 const APITracker = () => {
-  const { theme, setTheme } = useThemeStore();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterCriteria, setFilterCriteria] = useState<FilterCriteria>('all');
 
-  const handleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+  const filteredRequests = [].filter(request => {
+    const matchesSearch = request.url.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter =
+      filterCriteria === 'all'
+        ? true
+        : filterCriteria === 'success'
+          ? request.status >= 200 && request.status < 300
+          : filterCriteria === 'error'
+            ? request.status >= 400
+            : request.status >= 100 && request.status < 200;
+
+    return matchesSearch && matchesFilter;
+  });
+
+  const totalDataTransferred = filteredRequests.reduce((acc, curr) => acc + curr.dataSize, 0);
+
+  const handleAddTrackedApis = () => {
+    // Implementation for adding tracked APIs
+  };
+
+  const handleClearAll = () => {
+    // Implementation for clearing all tracked APIs
   };
 
   return (
-    <ThemeProvider>
-      <div className="p-4 bg-background">
-        <div className="flex justify-between items-center">
-          <h2 className={`text-${theme}-500`}>API Tracker</h2>
-          <Button onClick={handleTheme}>Toggle Theme</Button>
-        </div>
-      </div>
-    </ThemeProvider>
+    <div className="p-4 bg-background">
+      <Card className="p-4">
+        <Typography variant="h4">API Tracker</Typography>
+
+        <Controls onAddTrackedApis={handleAddTrackedApis} onClearAll={handleClearAll} />
+
+        <Filters
+          searchQuery={searchQuery}
+          filterCriteria={filterCriteria}
+          onSearchChange={setSearchQuery}
+          onFilterChange={setFilterCriteria}
+        />
+
+        <Stats
+          totalRequests={filteredRequests.length}
+          totalDataTransferred={totalDataTransferred}
+        />
+
+        <RequestList requests={filteredRequests} />
+      </Card>
+    </div>
   );
 };
 
