@@ -7,11 +7,12 @@ import { createRoot } from 'react-dom/client';
 interface RequestMetadata {
   url: string;
   method: string;
-  status: string;
+  status: number;
   duration: number;
-  body: string;
+  responseBody: string;
   id: string;
   numberOfBytes: number;
+  requestBody: string | chrome.devtools.network.Request['request']['postData'];
 }
 
 const APITracker = () => {
@@ -23,14 +24,19 @@ const APITracker = () => {
       const handleRequestFinished = (request: chrome.devtools.network.Request) => {
         if (request._resourceType === 'xhr' || request._resourceType === 'fetch') {
           try {
+            const url = new URL(request.request.url);
+            const pathname = url.pathname;
+            const postData = request?.request?.postData;
+            console.log('This is the request data ', request);
             request.getContent(content => {
               const requestMetadata: RequestMetadata = {
                 url: request.request.url,
                 method: request.request.method,
-                status: request.response.status.toString(),
+                status: request.response.status,
                 duration: request.time,
-                body: content,
-                id: `${request.request.method}-${request.request.url}-${Date.now()}`,
+                responseBody: content,
+                requestBody: postData || 'No request body',
+                id: `${request.request.method}-${pathname}`,
                 numberOfBytes: request.response.content.size || 0,
               };
 
