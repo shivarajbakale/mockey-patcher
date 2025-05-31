@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { APITracker } from "./api-tracker";
+import { Main } from "./components/main";
 
-const meta: Meta<typeof APITracker> = {
+const meta: Meta<typeof Main> = {
   title: "Devtools/APITracker",
-  component: APITracker,
+  component: Main,
 };
 
 export default meta;
 
-export const Default: StoryObj<typeof APITracker> = {};
+export const Default: StoryObj<typeof Main> = {};

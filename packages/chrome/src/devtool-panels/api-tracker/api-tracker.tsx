@@ -14,7 +14,7 @@ interface RequestMetadata {
 }
 
 const APITracker = () => {
-  const [allRequests, setAllRequests] = useState<RequestMetadata[]>([]);
+  const [requests, setRequests] = useState<RequestMetadata[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const APITracker = () => {
                 numberOfBytes: request.response.content.size || 0,
               };
 
-              setAllRequests(prev => [...prev, requestMetadata]);
+              setRequests(prev => [...prev, requestMetadata]);
             });
           } catch (err) {
             console.error('Error processing request:', err);
@@ -60,7 +60,7 @@ const APITracker = () => {
 
   return (
     <div className="p-4 bg-background">
-      <Main />
+      <Main requests={requests} error={error} onClearRequests={() => setRequests([])} />
     </div>
   );
 };
