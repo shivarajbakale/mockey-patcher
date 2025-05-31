@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+Always try to use the standard components defined in the components/ui folder for any implementation. 
+

@@ -8,7 +8,9 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"yarn workspace backend dev\""
+    "backend:dev": "yarn workspace backend dev",
+    "chrome:dev": "yarn workspace chrome dev",
+    "dev": "concurrently \"yarn backend:dev\" \"yarn chrome:dev\""
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

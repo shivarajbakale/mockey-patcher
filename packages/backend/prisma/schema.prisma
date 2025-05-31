@@ -14,22 +14,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Redirection {
-  id             Int              @id @default(autoincrement())
-  sourceUrl      String           @unique
-  targetUrl      String
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  isActive       Boolean          @default(true)
-  description    String?
-  RedirectionLog RedirectionLog[]
+model RuleCondition {
+  id        Int      @id @default(autoincrement())
+  ruleId    Int
+  condition String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rule      Rule     @relation(fields: [ruleId], references: [id])
 }
 
-model RedirectionLog {
-  id            Int         @id @default(autoincrement())
-  redirectionId Int
-  timestamp     DateTime    @default(now())
-  userAgent     String?
-  ipAddress     String?
-  redirection   Redirection @relation(fields: [redirectionId], references: [id])
+model Rule {
+  id         Int             @id @default(autoincrement())
+  name       String
+  conditions RuleCondition[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
 }

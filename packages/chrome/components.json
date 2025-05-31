@@ -1,0 +1,20 @@
+{
+    "$schema": "https://ui.shadcn.com/schema.json",
+    "style": "default",
+    "rsc": false,
+    "tsx": true,
+    "tailwind": {
+        "config": "tailwind.config.js",
+        "css": "src/style.css",
+        "baseColor": "slate",
+        "cssVariables": true,
+        "prefix": "plasmo-"
+    },
+    "aliases": {
+        "components": "~/components",
+        "utils": "~/lib/utils",
+        "ui": "~/components/ui",
+        "lib": "~/lib",
+        "hooks": "~/hooks"
+    }
+}
