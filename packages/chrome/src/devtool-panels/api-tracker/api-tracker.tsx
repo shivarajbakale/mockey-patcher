@@ -11,6 +11,8 @@ export interface RequestMetadata {
   id: string;
   numberOfBytes: number;
   requestBody: string | chrome.devtools.network.Request["request"]["postData"];
+  startTime: number;
+  endTime: number;
 }
 
 const APITracker = () => {
@@ -31,6 +33,10 @@ const APITracker = () => {
             const pathname = url.origin + url.pathname;
             const postData = request?.request?.postData;
             request.getContent((content) => {
+              // Calculate timing information
+              const startTime = new Date(request.startedDateTime).getTime();
+              const endTime = startTime + request.time;
+
               const requestMetadata: RequestMetadata = {
                 url: pathname,
                 method: request.request.method,
@@ -40,6 +46,8 @@ const APITracker = () => {
                 requestBody: postData || null,
                 id: `${request.request.method}-${pathname}`,
                 numberOfBytes: request.response.content.size || 0,
+                startTime,
+                endTime,
               };
 
               setRequests((prev) => [...prev, requestMetadata]);
@@ -67,8 +75,12 @@ const APITracker = () => {
   }, []);
 
   const onRefreshRequests = () => {
-    window.location.reload();
+    // Clear existing requests
+    setRequests([]);
+    // Reload the inspected page
+    chrome.devtools.inspectedWindow.reload({});
   };
+
   const onClearRequests = () => {
     setRequests([]);
   };

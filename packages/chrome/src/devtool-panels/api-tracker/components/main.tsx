@@ -14,6 +14,8 @@ export interface RequestMetadata {
   id: string;
   numberOfBytes: number;
   requestBody: string | chrome.devtools.network.Request["request"]["postData"];
+  startTime: number;
+  endTime: number;
 }
 
 interface MainProps {
