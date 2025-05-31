@@ -63,11 +63,11 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="plasmo-space-y-4">
-      <div className="plasmo-flex plasmo-items-center plasmo-gap-2">
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
         <DataTableViewOptions table={table} />
       </div>
-      <div className="plasmo-rounded-md plasmo-border">
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -108,7 +108,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="plasmo-h-24 plasmo-text-center"
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>

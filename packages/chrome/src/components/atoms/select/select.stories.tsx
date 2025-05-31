@@ -24,7 +24,7 @@ type Story = StoryObj<typeof Select>;
 export const Basic: Story = {
   render: () => (
     <Select>
-      <SelectTrigger className="plasmo-w-[180px]">
+      <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select a fruit" />
       </SelectTrigger>
       <SelectContent>
@@ -41,7 +41,7 @@ export const Basic: Story = {
 export const WithGroups: Story = {
   render: () => (
     <Select>
-      <SelectTrigger className="plasmo-w-[280px]">
+      <SelectTrigger className="w-[280px]">
         <SelectValue placeholder="Select a timezone" />
       </SelectTrigger>
       <SelectContent>
@@ -66,7 +66,7 @@ export const WithGroups: Story = {
 export const Disabled: Story = {
   render: () => (
     <Select disabled>
-      <SelectTrigger className="plasmo-w-[180px]">
+      <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Select an option" />
       </SelectTrigger>
       <SelectContent>
@@ -82,7 +82,7 @@ export const Disabled: Story = {
 export const WithError: Story = {
   render: () => (
     <Select>
-      <SelectTrigger className="plasmo-w-[180px] plasmo-border-red-500">
+      <SelectTrigger className="w-[180px] border-red-500">
         <SelectValue placeholder="Select an option" />
       </SelectTrigger>
       <SelectContent>
@@ -100,9 +100,9 @@ export const Controlled: Story = {
     const [value, setValue] = React.useState("");
 
     return (
-      <div className="plasmo-space-y-2">
+      <div className="space-y-2">
         <Select value={value} onValueChange={setValue}>
-          <SelectTrigger className="plasmo-w-[180px]">
+          <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a color" />
           </SelectTrigger>
           <SelectContent>
@@ -112,7 +112,7 @@ export const Controlled: Story = {
             <SelectItem value="yellow">Yellow</SelectItem>
           </SelectContent>
         </Select>
-        <div className="plasmo-text-sm">Selected value: {value}</div>
+        <div className="text-sm">Selected value: {value}</div>
       </div>
     );
   },
@@ -122,7 +122,7 @@ export const Controlled: Story = {
 export const CustomWidth: Story = {
   render: () => (
     <Select>
-      <SelectTrigger className="plasmo-w-[400px]">
+      <SelectTrigger className="w-[400px]">
         <SelectValue placeholder="Select a long option" />
       </SelectTrigger>
       <SelectContent>

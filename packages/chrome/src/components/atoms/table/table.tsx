@@ -5,14 +5,11 @@ import { cn } from "@/lib/utils";
 const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <div className="plasmo-relative plasmo-w-full plasmo-overflow-auto">
+>((props, ref) => (
+  <div className="relative w-full overflow-auto">
     <table
       ref={ref}
-      className={cn(
-        "plasmo-w-full plasmo-caption-bottom plasmo-text-sm",
-        className,
-      )}
+      className={cn("w-full caption-bottom text-sm", props.className)}
       {...props}
     />
   </div>
@@ -22,10 +19,10 @@ Table.displayName = "Table";
 const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <thead
     ref={ref}
-    className={cn("[&_tr]:plasmo-border-b", className)}
+    className={cn("[&_tr]:border-b", props.className)}
     {...props}
   />
 ));
@@ -34,10 +31,10 @@ TableHeader.displayName = "TableHeader";
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <tbody
     ref={ref}
-    className={cn("[&_tr:last-child]:plasmo-border-0", className)}
+    className={cn("[&_tr:last-child]:border-1 border", props.className)}
     {...props}
   />
 ));
@@ -46,12 +43,12 @@ TableBody.displayName = "TableBody";
 const TableFooter = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <tfoot
     ref={ref}
     className={cn(
-      "plasmo-border-t plasmo-bg-muted/50 plasmo-font-medium [&>tr]:last:plasmo-border-b-0",
-      className,
+      "bg-primary/5 border-t font-medium [&>tr]:last:border-b-0",
+      props.className,
     )}
     {...props}
   />
@@ -61,12 +58,12 @@ TableFooter.displayName = "TableFooter";
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
   React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <tr
     ref={ref}
     className={cn(
-      "plasmo-border-b plasmo-transition-colors hover:plasmo-bg-muted/50 data-[state=selected]:plasmo-bg-muted",
-      className,
+      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+      props.className,
     )}
     {...props}
   />
@@ -76,12 +73,12 @@ TableRow.displayName = "TableRow";
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <th
     ref={ref}
     className={cn(
-      "plasmo-h-12 plasmo-px-4 plasmo-text-left plasmo-align-middle plasmo-font-medium plasmo-text-muted-foreground [&:has([role=checkbox])]:plasmo-pr-0",
-      className,
+      "h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+      props.className,
     )}
     {...props}
   />
@@ -91,12 +88,12 @@ TableHead.displayName = "TableHead";
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <td
     ref={ref}
     className={cn(
-      "plasmo-p-4 plasmo-align-middle [&:has([role=checkbox])]:plasmo-pr-0",
-      className,
+      "p-4 align-middle [&:has([role=checkbox])]:pr-0",
+      props.className,
     )}
     {...props}
   />
@@ -106,13 +103,10 @@ TableCell.displayName = "TableCell";
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
   React.HTMLAttributes<HTMLTableCaptionElement>
->(({ className, ...props }, ref) => (
+>((props, ref) => (
   <caption
     ref={ref}
-    className={cn(
-      "plasmo-mt-4 plasmo-text-sm plasmo-text-muted-foreground",
-      className,
-    )}
+    className={cn("mt-4 text-sm text-muted-foreground", props.className)}
     {...props}
   />
 ));

@@ -28,38 +28,36 @@ export function DataTableColumnHeader<TData, TValue>({
   }
 
   return (
-    <div
-      className={cn("plasmo-flex plasmo-items-center plasmo-gap-2", className)}
-    >
+    <div className={cn("flex items-center gap-2", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
-            className="plasmo-data-[state=open]:plasmo-bg-accent -plasmo-ml-3 plasmo-h-8"
+            className="data-[state=open]:bg-accent -ml-3 h-8"
           >
             <span>{title}</span>
             {column.getIsSorted() === "desc" ? (
-              <ArrowDown className="plasmo-ml-2 plasmo-h-4 plasmo-w-4" />
+              <ArrowDown className="ml-2 h-4 w-4" />
             ) : column.getIsSorted() === "asc" ? (
-              <ArrowUp className="plasmo-ml-2 plasmo-h-4 plasmo-w-4" />
+              <ArrowUp className="ml-2 h-4 w-4" />
             ) : (
-              <ChevronsUpDown className="plasmo-ml-2 plasmo-h-4 plasmo-w-4" />
+              <ChevronsUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-            <ArrowUp className="plasmo-mr-2 plasmo-h-3.5 plasmo-w-3.5 plasmo-text-muted-foreground/70" />
+            <ArrowUp className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Asc
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-            <ArrowDown className="plasmo-mr-2 plasmo-h-3.5 plasmo-w-3.5 plasmo-text-muted-foreground/70" />
+            <ArrowDown className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Desc
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <EyeOff className="plasmo-mr-2 plasmo-h-3.5 plasmo-w-3.5 plasmo-text-muted-foreground/70" />
+            <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Hide
           </DropdownMenuItem>
         </DropdownMenuContent>

@@ -82,7 +82,7 @@ export const Basic: Story = {
           <DataTableColumnHeader column={column} title="Status" />
         ),
         cell: ({ row }) => (
-          <div className="plasmo-capitalize">{row.getValue("status")}</div>
+          <div className="capitalize">{row.getValue("status")}</div>
         ),
       },
       {
@@ -97,11 +97,7 @@ export const Basic: Story = {
             currency: "USD",
           }).format(amount);
 
-          return (
-            <div className="plasmo-text-right plasmo-font-medium">
-              {formatted}
-            </div>
-          );
+          return <div className="text-right font-medium">{formatted}</div>;
         },
       },
       {
@@ -147,7 +143,7 @@ export const WithSelectionAndActions: Story = {
           <DataTableColumnHeader column={column} title="Status" />
         ),
         cell: ({ row }) => (
-          <div className="plasmo-capitalize">{row.getValue("status")}</div>
+          <div className="capitalize">{row.getValue("status")}</div>
         ),
       },
       {
@@ -168,11 +164,7 @@ export const WithSelectionAndActions: Story = {
             currency: "USD",
           }).format(amount);
 
-          return (
-            <div className="plasmo-text-right plasmo-font-medium">
-              {formatted}
-            </div>
-          );
+          return <div className="text-right font-medium">{formatted}</div>;
         },
       },
       {
@@ -183,12 +175,9 @@ export const WithSelectionAndActions: Story = {
           return (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="plasmo-h-8 plasmo-w-8 plasmo-p-0"
-                >
-                  <span className="plasmo-sr-only">Open menu</span>
-                  <MoreHorizontal className="plasmo-h-4 plasmo-w-4" />
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -236,7 +225,7 @@ export const WithSearchAndFiltering: Story = {
           <DataTableColumnHeader column={column} title="Status" />
         ),
         cell: ({ row }) => (
-          <div className="plasmo-capitalize">{row.getValue("status")}</div>
+          <div className="capitalize">{row.getValue("status")}</div>
         ),
       },
       {
@@ -251,23 +240,19 @@ export const WithSearchAndFiltering: Story = {
             currency: "USD",
           }).format(amount);
 
-          return (
-            <div className="plasmo-text-right plasmo-font-medium">
-              {formatted}
-            </div>
-          );
+          return <div className="text-right font-medium">{formatted}</div>;
         },
       },
     ];
 
     return (
-      <div className="plasmo-space-y-4">
-        <div className="plasmo-flex plasmo-items-center plasmo-gap-2">
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
           <Input
             placeholder="Search all columns..."
             value={globalFilter ?? ""}
             onChange={(event) => setGlobalFilter(event.target.value)}
-            className="plasmo-max-w-sm"
+            className="max-w-sm"
           />
         </div>
         <DataTable columns={columns} data={data} />

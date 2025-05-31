@@ -52,20 +52,16 @@ export const Basic: Story = {
           <TableHead>Invoice</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Method</TableHead>
-          <TableHead className="plasmo-text-right">Amount</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.invoice}>
-            <TableCell className="plasmo-font-medium">
-              {invoice.invoice}
-            </TableCell>
+            <TableCell className="font-medium">{invoice.invoice}</TableCell>
             <TableCell>{invoice.paymentStatus}</TableCell>
             <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="plasmo-text-right">
-              {invoice.totalAmount}
-            </TableCell>
+            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -83,27 +79,23 @@ export const WithFooter: Story = {
           <TableHead>Invoice</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Method</TableHead>
-          <TableHead className="plasmo-text-right">Amount</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.invoice}>
-            <TableCell className="plasmo-font-medium">
-              {invoice.invoice}
-            </TableCell>
+            <TableCell className="font-medium">{invoice.invoice}</TableCell>
             <TableCell>{invoice.paymentStatus}</TableCell>
             <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="plasmo-text-right">
-              {invoice.totalAmount}
-            </TableCell>
+            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
       <TableFooter>
         <TableRow>
           <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="plasmo-text-right">$750.00</TableCell>
+          <TableCell className="text-right">$750.00</TableCell>
         </TableRow>
       </TableFooter>
     </Table>
@@ -116,23 +108,19 @@ export const Compact: Story = {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="plasmo-w-[100px]">Invoice</TableHead>
+          <TableHead className="w-[100px]">Invoice</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Method</TableHead>
-          <TableHead className="plasmo-text-right">Amount</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {invoices.map((invoice) => (
           <TableRow key={invoice.invoice}>
-            <TableCell className="plasmo-font-medium">
-              {invoice.invoice}
-            </TableCell>
+            <TableCell className="font-medium">{invoice.invoice}</TableCell>
             <TableCell>{invoice.paymentStatus}</TableCell>
             <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="plasmo-text-right">
-              {invoice.totalAmount}
-            </TableCell>
+            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
