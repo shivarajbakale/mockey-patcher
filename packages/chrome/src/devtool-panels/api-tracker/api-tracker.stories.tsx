@@ -1,9 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Main } from "./components/main";
 import { RequestItem } from "./components/RequestItem";
-import React from "react";
+import React, { useState } from "react";
 import { RequestList } from "./components/RequestList";
 import data from "./data.json";
+import { Button } from "@/components/atoms/button/button";
 
 const meta: Meta<typeof Main> = {
   title: "Devtools/APITracker",
@@ -23,5 +24,17 @@ export const RequestListStory: StoryObj<typeof RequestList> = {
   args: {
     requests: data,
   },
-  render: (args) => <RequestList {...args} />,
+  render: (args) => {
+    const [requests] = useState(args.requests);
+    const [empty, setEmpty] = useState(false);
+
+    return (
+      <div>
+        <Button onClick={() => setEmpty(!empty)}>Empty Requests</Button>
+        <div className="w-full">
+          <RequestList requests={empty ? [] : requests} />
+        </div>
+      </div>
+    );
+  },
 };
