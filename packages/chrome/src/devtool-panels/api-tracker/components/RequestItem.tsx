@@ -38,17 +38,10 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
             </div>
             <Typography
               variant="small"
-              className="font-medium truncate"
+              className="text-muted-foreground truncate"
               title={url.pathname}
             >
-              {url.pathname}
-            </Typography>
-            <Typography
-              variant="small"
-              className="text-muted-foreground truncate"
-              title={url.host}
-            >
-              {url.host}
+              {url.toString()}
             </Typography>
           </div>
           <Typography
