@@ -48,6 +48,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
         );
       },
       size: 20,
+      enableHiding: false,
     },
     {
       accessorKey: "duration",
