@@ -23,7 +23,7 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
   const url = new URL(request.url);
 
   return (
-    <Card className="p-4 hover:bg-muted/50 transition-colors">
+    <Card className="p-4 hover:bg-muted/50 transition-colors my-2">
       <div className="flex flex-col gap-3">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
@@ -34,10 +34,7 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
               >
                 {request.method}
               </Badge>
-              <Badge
-                variant="outline"
-                className={getStatusColor(request.status)}
-              >
+              <Badge className={getStatusColor(request.status)}>
                 {request.status}
               </Badge>
               <div className="flex items-center gap-2 ml-4">
@@ -58,10 +55,10 @@ export const RequestItem = ({ request }: { request: RequestMetadata }) => {
             </div>
             <Typography
               variant="small"
-              className="text-muted-foreground truncate"
+              className="text-muted-foreground truncate w-[200px]"
               title={url.pathname}
             >
-              {url.toString()}
+              {url.origin + url.pathname}
             </Typography>
           </div>
           <div>

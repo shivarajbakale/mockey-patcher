@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Main } from "./components/main";
+import { Button } from "@/components/atoms/button/button";
 
 export interface RequestMetadata {
   url: string;
@@ -38,7 +39,7 @@ const APITracker = () => {
                 status: request.response.status,
                 duration: request.time,
                 responseBody: content,
-                requestBody: postData || "No request body",
+                requestBody: postData || null,
                 id: `${request.request.method}-${pathname}`,
                 numberOfBytes: request.response.content.size || 0,
               };
@@ -69,6 +70,9 @@ const APITracker = () => {
 
   return (
     <div className="p-4 bg-background">
+      <Button onClick={() => console.log(JSON.stringify(requests))}>
+        Print Requests to Console
+      </Button>
       <Main
         requests={requests}
         error={error}

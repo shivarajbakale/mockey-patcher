@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Typography } from "@/components/atoms/typography/typography";
 
-interface RequestMetadata {
+export interface RequestMetadata {
   url: string;
   method: string;
   status: number;
