@@ -3,31 +3,51 @@ import type { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/atoms/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/atoms/data-table/data-table-column-header";
-import { Typography } from "@/components/atoms/typography/typography";
 import type { RequestMetadata } from "./main";
 import { formatBytes, formatDuration, getMethodColor } from "../utils";
 import { Checkbox } from "@/components/atoms/checkbox/checkbox";
+import { useRequestsStore } from "../store/requests";
 
 interface RequestListProps {
   requests: RequestMetadata[];
 }
 
 export const RequestList = ({ requests = [] }: RequestListProps) => {
+  const { selectedRequests, setSelectedRequests } = useRequestsStore();
+
   const columns: ColumnDef<RequestMetadata>[] = [
     {
       id: "select",
       header: ({ table }) => (
         <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
+          }
+          onCheckedChange={(value) => {
+            table.toggleAllPageRowsSelected(!!value);
+            const selectedRows = table.getSelectedRowModel().rows;
+            setSelectedRequests(selectedRows.map((row) => row.original));
+          }}
           aria-label="Select all"
+          className="translate-y-[2px]"
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value);
+            if (value) {
+              setSelectedRequests([...selectedRequests, row.original]);
+            } else {
+              setSelectedRequests(
+                selectedRequests.filter((r) => r.id !== row.original.id),
+              );
+            }
+          }}
           aria-label="Select row"
+          className="translate-y-[2px]"
         />
       ),
       enableSorting: false,
@@ -47,7 +67,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
           </div>
         );
       },
-      size: 20,
+      size: 80,
       enableHiding: false,
     },
     {
@@ -62,15 +82,20 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
       size: 100,
       enableHiding: false,
     },
-
     {
       accessorKey: "url",
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="URL" />
       ),
-      cell: ({ row }) => (
-        <div className="max-w-[500px] truncate">{row.getValue("url")}</div>
-      ),
+      cell: ({ row }) => {
+        const url = new URL(row.getValue("url"));
+        return (
+          <div className="font-medium break-all">
+            {url.origin + url.pathname}
+          </div>
+        );
+      },
+      size: 400,
     },
     {
       accessorKey: "status",
@@ -94,7 +119,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
       ),
       cell: ({ row }) => (
         <div
-          className={`font-medium rounded-lg w-1 ${getMethodColor(
+          className={`font-medium rounded-lg px-2 py-1 text-center ${getMethodColor(
             row.getValue("method"),
           )}`}
         >

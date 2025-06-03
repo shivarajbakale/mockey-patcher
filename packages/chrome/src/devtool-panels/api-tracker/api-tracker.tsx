@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Main } from "./components/main";
+import { useRequestsStore } from "./store/requests";
 
 export interface RequestMetadata {
   url: string;
@@ -16,8 +17,8 @@ export interface RequestMetadata {
 }
 
 const APITracker = () => {
-  const [requests, setRequests] = useState<RequestMetadata[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { requests, addRequest, clearRequests } = useRequestsStore();
 
   useEffect(() => {
     try {
@@ -50,7 +51,7 @@ const APITracker = () => {
                 endTime,
               };
 
-              setRequests((prev) => [...prev, requestMetadata]);
+              addRequest(requestMetadata);
             });
           } catch (err) {
             console.error("Error processing request:", err);
@@ -72,17 +73,13 @@ const APITracker = () => {
       console.error("Error setting up network listener:", err);
       setError("Error setting up network tracking");
     }
-  }, []);
+  }, [addRequest]);
 
   const onRefreshRequests = () => {
     // Clear existing requests
-    setRequests([]);
+    clearRequests();
     // Reload the inspected page
     chrome.devtools.inspectedWindow.reload({});
-  };
-
-  const onClearRequests = () => {
-    setRequests([]);
   };
 
   return (
@@ -90,7 +87,7 @@ const APITracker = () => {
       <Main
         requests={requests}
         error={error}
-        onClearRequests={onClearRequests}
+        onClearRequests={clearRequests}
         onRefreshRequests={onRefreshRequests}
       />
     </div>

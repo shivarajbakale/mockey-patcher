@@ -4,6 +4,7 @@ import { RequestList } from "./RequestList";
 import { Analytics } from "./Analytics";
 import { Button } from "@/components/atoms/button/button";
 import { RefreshCcwIcon, TrashIcon } from "lucide-react";
+import { useRequestsStore } from "../store/requests";
 
 export interface RequestMetadata {
   url: string;
@@ -30,14 +31,26 @@ const Main: React.FC<MainProps> = ({
   onClearRequests,
   onRefreshRequests,
 }) => {
+  const { selectedRequests, clearRequests } = useRequestsStore();
+
   const onRefreshPlugin = () => {
     window.location.reload();
+  };
+
+  const handleClearRequests = () => {
+    clearRequests();
+    onClearRequests();
   };
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <Typography variant="h4">Mocky Balboa</Typography>
+        {selectedRequests.length > 0 && (
+          <Typography variant="small" className="text-muted-foreground">
+            {selectedRequests.length} requests selected
+          </Typography>
+        )}
       </div>
       <div className="flex gap-2">
         <Button variant="outline" size="sm" onClick={onRefreshPlugin}>
@@ -48,7 +61,7 @@ const Main: React.FC<MainProps> = ({
           <RefreshCcwIcon className="w-4 h-4" />
           Recalculate
         </Button>
-        <Button variant="outline" size="sm" onClick={onClearRequests}>
+        <Button variant="outline" size="sm" onClick={handleClearRequests}>
           <TrashIcon className="w-4 h-4" />
           Clear
         </Button>
