@@ -7,6 +7,8 @@ import type { RequestMetadata } from "./main";
 import { formatBytes, formatDuration, getMethodColor } from "../utils";
 import { Checkbox } from "@/components/atoms/checkbox/checkbox";
 import { useRequestsStore } from "../store/requests";
+import { Button } from "@/components/atoms/button/button";
+import { TargetIcon } from "lucide-react";
 
 interface RequestListProps {
   requests: RequestMetadata[];
@@ -22,6 +24,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
   const isRequestSelected = useRequestsStore(
     (state) => state.isRequestSelected,
   );
+  const selectionState = useRequestsStore((state) => state.selectionState);
 
   const handleRowSelection = useCallback(
     (request: RequestMetadata, checked: boolean) => {
@@ -48,28 +51,28 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
     [requests, setSelectedRequests],
   );
 
+  const handleMockSelectedRequests = useCallback(() => {
+    const selectedRequests = requests.filter((request) =>
+      selectedRequestIds.has(request.id),
+    );
+    console.log("selectedRequests", selectedRequests);
+  }, [requests, selectedRequestIds]);
+
   const columns = useMemo<ColumnDef<RequestMetadata>[]>(
     () => [
       {
         id: "select",
-        header: () => {
-          const allSelected =
-            requests.length > 0 &&
-            requests.every((r) => selectedRequestIds.has(r.id));
-          const someSelected =
-            requests.some((r) => selectedRequestIds.has(r.id)) && !allSelected;
-
-          console.log("someSelected", selectedRequestIds);
-
-          return (
-            <Checkbox
-              checked={allSelected || (someSelected ? "indeterminate" : false)}
-              onCheckedChange={handleSelectAll}
-              aria-label="Select all"
-              className="translate-y-[2px]"
-            />
-          );
-        },
+        header: () => (
+          <Checkbox
+            checked={
+              selectionState.allSelected ||
+              (selectionState.someSelected ? "indeterminate" : false)
+            }
+            onCheckedChange={handleSelectAll}
+            aria-label="Select all"
+            className="translate-y-[2px]"
+          />
+        ),
         cell: ({ row }) => (
           <Checkbox
             checked={selectedRequestIds.has(row.original.id)}
@@ -161,10 +164,23 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
         size: 80,
       },
     ],
-    [selectedRequestIds, handleSelectAll, handleRowSelection],
+    [selectedRequestIds, handleSelectAll, handleRowSelection, selectionState],
   );
 
-  return <DataTable columns={columns} data={requests} />;
+  return (
+    <DataTable columns={columns} data={requests}>
+      {(selectionState.someSelected || selectionState.allSelected) && (
+        <Button
+          variant="default"
+          size="sm"
+          onClick={handleMockSelectedRequests}
+        >
+          <TargetIcon className="w-4 h-4" />
+          Mock Selected Requests
+        </Button>
+      )}
+    </DataTable>
+  );
 };
 
 // Helper function to determine status color

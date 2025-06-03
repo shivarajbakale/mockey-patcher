@@ -31,7 +31,10 @@ const Main: React.FC<MainProps> = ({
   onClearRequests,
   onRefreshRequests,
 }) => {
-  const { selectedRequests, clearRequests } = useRequestsStore();
+  const selectedRequests = useRequestsStore((state) =>
+    state.getSelectedRequests(),
+  );
+  const clearRequests = useRequestsStore((state) => state.clearRequests);
 
   const onRefreshPlugin = () => {
     window.location.reload();
