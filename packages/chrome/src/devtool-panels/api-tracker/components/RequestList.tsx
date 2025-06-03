@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/atoms/data-table/data-table";
@@ -13,124 +13,156 @@ interface RequestListProps {
 }
 
 export const RequestList = ({ requests = [] }: RequestListProps) => {
-  const { selectedRequests, setSelectedRequests } = useRequestsStore();
+  const selectedRequestIds = useRequestsStore(
+    (state) => state.selectedRequestIds,
+  );
+  const setSelectedRequests = useRequestsStore(
+    (state) => state.setSelectedRequests,
+  );
+  const isRequestSelected = useRequestsStore(
+    (state) => state.isRequestSelected,
+  );
 
-  const columns: ColumnDef<RequestMetadata>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() ? "indeterminate" : false)
-          }
-          onCheckedChange={(value) => {
-            table.toggleAllPageRowsSelected(!!value);
-            const selectedRows = table.getSelectedRowModel().rows;
-            setSelectedRequests(selectedRows.map((row) => row.original));
-          }}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => {
-            row.toggleSelected(!!value);
-            if (value) {
-              setSelectedRequests([...selectedRequests, row.original]);
-            } else {
-              setSelectedRequests(
-                selectedRequests.filter((r) => r.id !== row.original.id),
-              );
+  const handleRowSelection = useCallback(
+    (request: RequestMetadata, checked: boolean) => {
+      if (checked) {
+        const newSelectedRequests = [
+          ...requests.filter((r) => isRequestSelected(r.id)),
+          request,
+        ];
+        setSelectedRequests(newSelectedRequests);
+      } else {
+        const newSelectedRequests = requests.filter(
+          (r) => isRequestSelected(r.id) && r.id !== request.id,
+        );
+        setSelectedRequests(newSelectedRequests);
+      }
+    },
+    [requests, setSelectedRequests, isRequestSelected],
+  );
+
+  const handleSelectAll = useCallback(
+    (checked: boolean) => {
+      setSelectedRequests(checked ? requests : []);
+    },
+    [requests, setSelectedRequests],
+  );
+
+  const columns = useMemo<ColumnDef<RequestMetadata>[]>(
+    () => [
+      {
+        id: "select",
+        header: () => {
+          const allSelected =
+            requests.length > 0 &&
+            requests.every((r) => selectedRequestIds.has(r.id));
+          const someSelected =
+            requests.some((r) => selectedRequestIds.has(r.id)) && !allSelected;
+
+          console.log("someSelected", selectedRequestIds);
+
+          return (
+            <Checkbox
+              checked={allSelected || (someSelected ? "indeterminate" : false)}
+              onCheckedChange={handleSelectAll}
+              aria-label="Select all"
+              className="translate-y-[2px]"
+            />
+          );
+        },
+        cell: ({ row }) => (
+          <Checkbox
+            checked={selectedRequestIds.has(row.original.id)}
+            onCheckedChange={(checked) =>
+              handleRowSelection(row.original, !!checked)
             }
-          }}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-      size: 40,
-    },
-    {
-      accessorKey: "numberOfBytes",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Bytes" />
-      ),
-      cell: ({ row }) => {
-        const numberOfBytes = row.getValue("numberOfBytes") as number;
-        return (
-          <div className="font-medium text-right">
-            {formatBytes(numberOfBytes)}
+            aria-label="Select row"
+            className="translate-y-[2px]"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+        size: 40,
+      },
+      {
+        accessorKey: "numberOfBytes",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Bytes" />
+        ),
+        cell: ({ row }) => {
+          const numberOfBytes = row.getValue("numberOfBytes") as number;
+          return (
+            <div className="font-medium text-right">
+              {formatBytes(numberOfBytes)}
+            </div>
+          );
+        },
+        size: 80,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "duration",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Duration" />
+        ),
+        cell: ({ row }) => {
+          const duration = row.getValue("duration") as number;
+          return <div className="font-medium">{formatDuration(duration)}</div>;
+        },
+        size: 100,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "url",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="URL" />
+        ),
+        cell: ({ row }) => {
+          const url = new URL(row.getValue("url"));
+          return (
+            <div className="font-medium break-all">
+              {url.origin + url.pathname}
+            </div>
+          );
+        },
+        size: 400,
+      },
+      {
+        accessorKey: "status",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
+        cell: ({ row }) => {
+          const status = row.getValue("status") as number;
+          return (
+            <div className={`font-medium ${getStatusColor(status)}`}>
+              {status}
+            </div>
+          );
+        },
+        size: 80,
+      },
+      {
+        accessorKey: "method",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Method" />
+        ),
+        cell: ({ row }) => (
+          <div
+            className={`font-medium rounded-lg px-2 py-1 text-center ${getMethodColor(
+              row.getValue("method"),
+            )}`}
+          >
+            {row.getValue("method")}
           </div>
-        );
+        ),
+        enableSorting: false,
+        enableResizing: false,
+        size: 80,
       },
-      size: 80,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "duration",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Duration" />
-      ),
-      cell: ({ row }) => {
-        const duration = row.getValue("duration") as number;
-        return <div className="font-medium">{formatDuration(duration)}</div>;
-      },
-      size: 100,
-      enableHiding: false,
-    },
-    {
-      accessorKey: "url",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="URL" />
-      ),
-      cell: ({ row }) => {
-        const url = new URL(row.getValue("url"));
-        return (
-          <div className="font-medium break-all">
-            {url.origin + url.pathname}
-          </div>
-        );
-      },
-      size: 400,
-    },
-    {
-      accessorKey: "status",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
-      ),
-      cell: ({ row }) => {
-        const status = row.getValue("status") as number;
-        return (
-          <div className={`font-medium ${getStatusColor(status)}`}>
-            {status}
-          </div>
-        );
-      },
-      size: 80,
-    },
-    {
-      accessorKey: "method",
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Method" />
-      ),
-      cell: ({ row }) => (
-        <div
-          className={`font-medium rounded-lg px-2 py-1 text-center ${getMethodColor(
-            row.getValue("method"),
-          )}`}
-        >
-          {row.getValue("method")}
-        </div>
-      ),
-      enableSorting: false,
-      enableResizing: false,
-      size: 80,
-    },
-  ];
+    ],
+    [selectedRequestIds, handleSelectAll, handleRowSelection],
+  );
 
   return <DataTable columns={columns} data={requests} />;
 };
