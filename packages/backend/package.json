@@ -7,7 +7,14 @@
     "dev": "nodemon src/app.ts",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
-    "build": "tsc"
+    "build": "tsc",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:seed": "ts-node prisma/seed.ts",
+    "setup": "npm run db:up && npm run db:migrate && npm run db:generate"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
