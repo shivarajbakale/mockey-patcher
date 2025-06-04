@@ -32,7 +32,7 @@ model Rule {
 }
 
 model Request {
-  id            Int      @id @default(autoincrement())
+  id            String   @id @default(uuid())
   url           String
   method        String
   status        Int
@@ -41,7 +41,7 @@ model Request {
   requestBody   Json?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  startTime     Int
-  endTime       Int
-  numberOfBytes Int
+  startTime     BigInt
+  endTime       BigInt
+  numberOfBytes BigInt
 }

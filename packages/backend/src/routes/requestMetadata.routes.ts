@@ -13,17 +13,25 @@ router.post("/create", async (req, res) => {
   const newRequests = await prisma.request.createMany({
     data: requests,
   });
-  return res.json(newRequests);
+  return res.json({
+    message: "Requests created successfully",
+    requests: newRequests,
+  });
 });
 
 router.delete("/delete-all", async (req, res) => {
   await prisma.request.deleteMany();
-  return res.json({ message: "All requests deleted" });
+  return res.json({
+    message: "All requests deleted",
+  });
 });
 
 router.get("/get-all", async (req, res) => {
   const requests = await prisma.request.findMany();
-  return res.json(requests);
+  return res.json({
+    message: "Requests fetched successfully",
+    requests: requests,
+  });
 });
 
 export default router;
