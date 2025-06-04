@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "nodemon src/app.ts",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
     "build": "tsc"
   },
   "dependencies": {

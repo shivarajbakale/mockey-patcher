@@ -30,3 +30,18 @@ model Rule {
   createdAt  DateTime        @default(now())
   updatedAt  DateTime        @updatedAt
 }
+
+model Request {
+  id            Int      @id @default(autoincrement())
+  url           String
+  method        String
+  status        Int
+  duration      Int
+  responseBody  Json
+  requestBody   Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  startTime     Int
+  endTime       Int
+  numberOfBytes Int
+}
