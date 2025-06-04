@@ -31,10 +31,15 @@ const Main: React.FC<MainProps> = ({
   onClearRequests,
   onRefreshRequests,
 }) => {
-  const selectedRequests = useRequestsStore((state) =>
-    state.getSelectedRequests(),
+  const selectedRequestIds = useRequestsStore(
+    (state) => state.selectedRequestIds,
   );
   const clearRequests = useRequestsStore((state) => state.clearRequests);
+
+  const selectedRequestsCount = React.useMemo(
+    () => selectedRequestIds.size,
+    [selectedRequestIds],
+  );
 
   const onRefreshPlugin = () => {
     window.location.reload();
@@ -49,9 +54,9 @@ const Main: React.FC<MainProps> = ({
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
         <Typography variant="h4">Mocky Balboa</Typography>
-        {selectedRequests.length > 0 && (
+        {selectedRequestsCount > 0 && (
           <Typography variant="small" className="text-muted-foreground">
-            {selectedRequests.length} requests selected
+            {selectedRequestsCount} requests selected
           </Typography>
         )}
       </div>

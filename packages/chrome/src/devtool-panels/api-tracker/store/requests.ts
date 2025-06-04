@@ -15,6 +15,8 @@ interface RequestsState {
   setSelectedRequests: (requests: RequestMetadata[]) => void;
   toggleRequestSelection: (request: RequestMetadata) => void;
   isRequestSelected: (requestId: string) => boolean;
+  getSelectedRequests: () => RequestMetadata[];
+  getSelectionState: () => SelectionState;
 }
 
 const calculateSelectionState = (
@@ -28,52 +30,49 @@ const calculateSelectionState = (
   return { allSelected, someSelected };
 };
 
-export const useRequestsStore = create<RequestsState>((set, get) => ({
-  requests: [],
-  selectedRequestIds: new Set<string>(),
-  selectionState: { allSelected: false, someSelected: false },
+export const useRequestsStore = create<RequestsState>((set, get) => {
+  const getNewState = (
+    requests: RequestMetadata[],
+    selectedIds: Set<string>,
+  ) => ({
+    requests,
+    selectedRequestIds: selectedIds,
+    selectionState: calculateSelectionState(requests, selectedIds),
+  });
 
-  addRequest: (request) =>
-    set((state) => ({
-      ...state,
-      requests: [...state.requests, request],
-      selectionState: calculateSelectionState(
-        [...state.requests, request],
-        state.selectedRequestIds,
-      ),
-    })),
+  return {
+    ...getNewState([], new Set()),
 
-  clearRequests: () =>
-    set({
-      requests: [],
-      selectedRequestIds: new Set<string>(),
-      selectionState: { allSelected: false, someSelected: false },
-    }),
+    addRequest: (request) =>
+      set((state) => {
+        const newRequests = [...state.requests, request];
+        return getNewState(newRequests, state.selectedRequestIds);
+      }),
 
-  setSelectedRequests: (requests) =>
-    set((state) => {
-      const newSelectedIds = new Set(requests.map((r) => r.id));
-      return {
-        ...state,
-        selectedRequestIds: newSelectedIds,
-        selectionState: calculateSelectionState(state.requests, newSelectedIds),
-      };
-    }),
+    clearRequests: () => set(() => getNewState([], new Set())),
 
-  toggleRequestSelection: (request) =>
-    set((state) => {
-      const newSelectedIds = new Set(state.selectedRequestIds);
-      if (newSelectedIds.has(request.id)) {
-        newSelectedIds.delete(request.id);
-      } else {
-        newSelectedIds.add(request.id);
-      }
-      return {
-        ...state,
-        selectedRequestIds: newSelectedIds,
-        selectionState: calculateSelectionState(state.requests, newSelectedIds),
-      };
-    }),
+    setSelectedRequests: (requests) =>
+      set((state) => {
+        const newSelectedIds = new Set(requests.map((r) => r.id));
+        return getNewState(state.requests, newSelectedIds);
+      }),
 
-  isRequestSelected: (requestId) => get().selectedRequestIds.has(requestId),
-}));
+    toggleRequestSelection: (request) =>
+      set((state) => {
+        const newSelectedIds = new Set(state.selectedRequestIds);
+        if (newSelectedIds.has(request.id)) {
+          newSelectedIds.delete(request.id);
+        } else {
+          newSelectedIds.add(request.id);
+        }
+        return getNewState(state.requests, newSelectedIds);
+      }),
+
+    isRequestSelected: (requestId) => get().selectedRequestIds.has(requestId),
+
+    getSelectedRequests: () =>
+      get().requests.filter((r) => get().selectedRequestIds.has(r.id)),
+
+    getSelectionState: () => get().selectionState,
+  };
+});

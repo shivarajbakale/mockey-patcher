@@ -11,18 +11,15 @@ import { Button } from "@/components/atoms/button/button";
 import { TargetIcon } from "lucide-react";
 
 interface RequestListProps {
-  requests: RequestMetadata[];
+  requests?: RequestMetadata[];
 }
 
-export const RequestList = ({ requests = [] }: RequestListProps) => {
+const RequestListComponent = ({ requests = [] }: RequestListProps) => {
   const selectedRequestIds = useRequestsStore(
     (state) => state.selectedRequestIds,
   );
   const setSelectedRequests = useRequestsStore(
     (state) => state.setSelectedRequests,
-  );
-  const isRequestSelected = useRequestsStore(
-    (state) => state.isRequestSelected,
   );
   const selectionState = useRequestsStore((state) => state.selectionState);
 
@@ -30,18 +27,18 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
     (request: RequestMetadata, checked: boolean) => {
       if (checked) {
         const newSelectedRequests = [
-          ...requests.filter((r) => isRequestSelected(r.id)),
+          ...requests.filter((r) => selectedRequestIds.has(r.id)),
           request,
         ];
         setSelectedRequests(newSelectedRequests);
       } else {
         const newSelectedRequests = requests.filter(
-          (r) => isRequestSelected(r.id) && r.id !== request.id,
+          (r) => selectedRequestIds.has(r.id) && r.id !== request.id,
         );
         setSelectedRequests(newSelectedRequests);
       }
     },
-    [requests, setSelectedRequests, isRequestSelected],
+    [requests, setSelectedRequests, selectedRequestIds],
   );
 
   const handleSelectAll = useCallback(
@@ -55,7 +52,7 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
     const selectedRequests = requests.filter((request) =>
       selectedRequestIds.has(request.id),
     );
-    console.log("selectedRequests", selectedRequests);
+    window.console.log("selectedRequests", selectedRequests);
   }, [requests, selectedRequestIds]);
 
   const columns = useMemo<ColumnDef<RequestMetadata>[]>(
@@ -167,21 +164,32 @@ export const RequestList = ({ requests = [] }: RequestListProps) => {
     [selectedRequestIds, handleSelectAll, handleRowSelection, selectionState],
   );
 
-  return (
-    <DataTable columns={columns} data={requests}>
-      {(selectionState.someSelected || selectionState.allSelected) && (
-        <Button
-          variant="default"
-          size="sm"
-          onClick={handleMockSelectedRequests}
-        >
-          <TargetIcon className="w-4 h-4" />
-          Mock Selected Requests
-        </Button>
-      )}
-    </DataTable>
-  );
+  const tableContent = useMemo(() => {
+    const actionButton = (selectionState.someSelected ||
+      selectionState.allSelected) && (
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={handleMockSelectedRequests}
+      >
+        <TargetIcon className="w-4 h-4" />
+        Mock Selected Requests
+      </Button>
+    );
+
+    return (
+      <DataTable columns={columns} data={requests}>
+        {actionButton}
+      </DataTable>
+    );
+  }, [columns, requests, selectionState, handleMockSelectedRequests]);
+
+  return tableContent;
 };
+
+RequestListComponent.displayName = "RequestList";
+
+export const RequestList = React.memo(RequestListComponent);
 
 // Helper function to determine status color
 const getStatusColor = (status: number): string => {
