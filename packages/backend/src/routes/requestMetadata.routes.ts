@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { PrismaClient } from "../generated/prisma";
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 interface RequestData {
   url: string;
@@ -14,7 +15,6 @@ interface RequestData {
 }
 
 const prisma = new PrismaClient();
-
 const router = Router();
 
 router.get("/", (req, res) => {
@@ -24,23 +24,43 @@ router.get("/", (req, res) => {
 router.post("/create", async (req, res) => {
   const { requests } = req.body;
 
-  // Ensure numeric values are properly handled
-  const processedRequests = requests.map((request: RequestData) => ({
-    ...request,
-    startTime: Number(request.startTime),
-    endTime: Number(request.endTime),
-    duration: Number(request.duration),
-    numberOfBytes: Number(request.numberOfBytes),
-    status: Number(request.status),
-  }));
+  const processedRequests = requests.map((request: RequestData) => {
+    let parsedResponseBody;
+    try {
+      parsedResponseBody = JSON.parse(request.responseBody);
+    } catch (error) {
+      parsedResponseBody = {};
+    }
+    return {
+      ...request,
+      responseBody: parsedResponseBody,
+      startTime: Number(request.startTime),
+      endTime: Number(request.endTime),
+      duration: Number(request.duration),
+      numberOfBytes: Number(request.numberOfBytes),
+      status: Number(request.status),
+    };
+  });
 
-  const newRequests = await prisma.request.createMany({
+  await prisma.request.createMany({
     data: processedRequests,
+    skipDuplicates: true,
+  });
+
+  await delay(1000);
+  const addedRequests = await prisma.request.findMany({
+    select: {
+      requestId: true,
+      id: true,
+      duration: true,
+      url: true,
+      method: true,
+    },
   });
 
   return res.json({
     message: "Requests created successfully",
-    count: newRequests.count,
+    requests: addedRequests,
   });
 });
 
@@ -52,19 +72,19 @@ router.delete("/delete-all", async (req, res) => {
 });
 
 router.get("/get-all", async (req, res) => {
-  const requests = await prisma.request.findMany();
-
-  // Transform BigInt values to regular numbers
-  const serializedRequests = requests.map((request) => ({
-    ...request,
-    startTime: Number(request.startTime),
-    endTime: Number(request.endTime),
-    duration: Number(request.duration),
-  }));
+  const requests = await prisma.request.findMany({
+    select: {
+      requestId: true,
+      id: true,
+      duration: true,
+      url: true,
+      method: true,
+    },
+  });
 
   return res.json({
     message: "Requests fetched successfully",
-    requests: serializedRequests,
+    requests,
   });
 });
 

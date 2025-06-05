@@ -9,7 +9,7 @@ export interface RequestMetadata {
   status: number;
   duration: number;
   responseBody: string;
-  id: string;
+  requestId: string;
   numberOfBytes: number;
   requestBody: string | chrome.devtools.network.Request["request"]["postData"];
   startTime: number;
@@ -18,10 +18,12 @@ export interface RequestMetadata {
 
 const APITracker = () => {
   const [error, setError] = useState<string | null>(null);
-  const { requests, addRequest, clearRequests } = useRequestsStore();
+  const { requests, addRequest, clearRequests, getMockedRequests } =
+    useRequestsStore();
 
   useEffect(() => {
     try {
+      getMockedRequests();
       const handleRequestFinished = (
         request: chrome.devtools.network.Request,
       ) => {
@@ -33,6 +35,8 @@ const APITracker = () => {
             const url = new URL(request.request.url);
             const pathname = url.origin + url.pathname;
             const postData = request?.request?.postData;
+            const stableId = `${request.request.method}::${pathname}`;
+
             request.getContent((content) => {
               // Calculate timing information
               const startTime = new Date(request.startedDateTime).getTime();
@@ -45,7 +49,7 @@ const APITracker = () => {
                 duration: request.time,
                 responseBody: content,
                 requestBody: postData || null,
-                id: `${request.request.method}-${pathname}`,
+                requestId: stableId,
                 numberOfBytes: request.response.content.size || 0,
                 startTime,
                 endTime,

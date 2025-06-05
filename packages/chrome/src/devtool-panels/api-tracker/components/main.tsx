@@ -1,23 +1,18 @@
 import React from "react";
 import { Typography } from "@/components/atoms/typography/typography";
 import { RequestList } from "./RequestList";
+import { MockedList } from "./MockedList";
 import { Analytics } from "./Analytics";
 import { Button } from "@/components/atoms/button/button";
 import { RefreshCcwIcon, TrashIcon } from "lucide-react";
 import { useRequestsStore } from "../store/requests";
-
-export interface RequestMetadata {
-  url: string;
-  method: string;
-  status: number;
-  duration: number;
-  responseBody: string;
-  id: string;
-  numberOfBytes: number;
-  requestBody: string | chrome.devtools.network.Request["request"]["postData"];
-  startTime: number;
-  endTime: number;
-}
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/atoms/tabs/tabs";
+import type { RequestMetadata } from "../api-tracker";
 
 interface MainProps {
   requests: RequestMetadata[];
@@ -35,6 +30,8 @@ const Main: React.FC<MainProps> = ({
     (state) => state.selectedRequestIds,
   );
   const clearRequests = useRequestsStore((state) => state.clearRequests);
+  const mockedRequests = useRequestsStore((state) => state.mockedRequests);
+  const deleteAllMocks = useRequestsStore((state) => state.deleteAllMocks);
 
   const selectedRequestsCount = React.useMemo(
     () => selectedRequestIds.size,
@@ -48,6 +45,23 @@ const Main: React.FC<MainProps> = ({
   const handleClearRequests = () => {
     clearRequests();
     onClearRequests();
+  };
+
+  const clearAllRules = () => {
+    chrome.declarativeNetRequest.getDynamicRules((rules) => {
+      chrome.declarativeNetRequest.updateDynamicRules(
+        {
+          removeRuleIds: rules.map((rule) => rule.id),
+        },
+        () => {
+          console.log("Rules removed");
+        },
+      );
+    });
+  };
+
+  const handleDeleteAllMocks = () => {
+    deleteAllMocks();
   };
 
   return (
@@ -73,13 +87,33 @@ const Main: React.FC<MainProps> = ({
           <TrashIcon className="w-4 h-4" />
           Clear
         </Button>
+        <Button variant="outline" size="sm" onClick={clearAllRules}>
+          <TrashIcon className="w-4 h-4" />
+          Clear all rules
+        </Button>
       </div>
       <div className="flex justify-between items-center mb-4">
         <Analytics requests={requests} />
       </div>
-      <div className="scroll-container">
-        <RequestList requests={requests} />
-      </div>
+      <Tabs defaultValue="all-requests" className="w-full h-full flex flex-col">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="all-requests">All Requests</TabsTrigger>
+          <TabsTrigger value="mock-requests">Mock Requests</TabsTrigger>
+        </TabsList>
+        <TabsContent value="all-requests" className="flex-grow">
+          <div className="h-[calc(100vh-220px)] overflow-hidden">
+            <RequestList requests={requests} />
+          </div>
+        </TabsContent>
+        <TabsContent value="mock-requests" className="flex-grow">
+          <div className="h-[calc(100vh-220px)] overflow-hidden">
+            <MockedList
+              requests={mockedRequests}
+              onDeleteAllMocks={handleDeleteAllMocks}
+            />
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

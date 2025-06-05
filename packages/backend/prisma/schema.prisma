@@ -10,7 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -32,7 +32,8 @@ model Rule {
 }
 
 model Request {
-  id            String   @id @default(uuid())
+  id            String   @id @default(cuid())
+  requestId     String   @unique
   url           String
   method        String
   status        Int
@@ -44,4 +45,17 @@ model Request {
   startTime     Float
   endTime       Float
   numberOfBytes Float
+
+  // Indexes for better query performance
+  @@index([url])
+  @@index([method])
+  @@index([startTime])
+  @@index([endTime])
+  @@index([status])
+  // Composite indexes for common query patterns
+  @@index([url, method])
+  @@index([startTime, endTime])
+  @@index([method, status])
+  // Index for time-based queries with method
+  @@index([method, startTime, endTime])
 }

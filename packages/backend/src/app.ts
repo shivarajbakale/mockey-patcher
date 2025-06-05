@@ -1,63 +1,68 @@
-import createError, { HttpError } from "http-errors";
-import express, { Request, Response, NextFunction } from "express";
+import express from "express";
 import cors from "cors";
-import cookieParser from "cookie-parser";
+import bodyParser from "body-parser";
 import logger from "morgan";
+import cookieParser from "cookie-parser";
 import indexRouter from "./routes/index";
 import requestMetadataRouter from "./routes/requestMetadata.routes";
-import https from "https";
-import http from "http";
-import fs from "fs";
-import path from "path";
+import mocksRouter from "./routes/mocks.routes";
 
 const app = express();
 
-// Enable CORS for all routes
-app.use(cors());
+const corsOptions = {
+  origin: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: "*",
+  credentials: true,
+};
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  const requestHeaders = req.headers["access-control-request-headers"];
+  if (origin) {
+    res.header("Access-Control-Allow-Origin", origin);
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    if (requestHeaders) {
+      // Echo back exactly what the browser asked to send
+      res.header("Access-Control-Allow-Headers", requestHeaders as string);
+    } else {
+      res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    }
+  }
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
-// Middleware setup
-app.options("*", cors());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
+app.use(bodyParser.json({ limit: "20mb" }));
+app.use(bodyParser.urlencoded({ limit: "20mb", extended: true }));
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json({ limit: "20mb" }));
+app.use(express.urlencoded({ limit: "20mb", extended: true }));
 app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/requests", requestMetadataRouter);
+app.use("/mocks", mocksRouter);
 
-app.use((req: Request, res: Response, next: NextFunction) => {
-  next(createError(404));
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ success: false, message: "Not Found" });
 });
 
-app.use((err: HttpError, req: Request, res: Response, next: NextFunction) => {
-  // Set locals, only providing error in development
+// Error handler
+app.use((err: any, req: express.Request, res: express.Response) => {
   const message = err.message;
   const error = req.app.get("env") === "development" ? err : {};
-
-  // Send error response
-  res.status(err.status || 500).json({
-    success: false,
-    message: message,
-    error: error,
-  });
+  res.status(err.status || 500).json({ success: false, message, error });
 });
 
-// SSL configuration
-const sslOptions = {
-  key: fs.readFileSync(path.join(__dirname, "../ssl/private.key")),
-  cert: fs.readFileSync(path.join(__dirname, "../ssl/certificate.pem")),
-};
-
-// Create HTTP server
-const httpServer = http.createServer(app);
-httpServer.listen(3000, () => {
-  console.log("HTTP Server running on port 3000");
-});
-
-// Create HTTPS server
-const httpsServer = https.createServer(sslOptions, app);
-httpsServer.listen(3443, () => {
-  console.log("HTTPS Server running on port 3443");
+app.listen(3000, () => {
+  console.log("Mock server running on http://localhost:3000");
 });
 
 export default app;

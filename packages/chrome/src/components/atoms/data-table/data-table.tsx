@@ -30,12 +30,16 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   children?: React.ReactNode;
+  className?: string;
+  enableViewOptions?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   children,
+  className,
+  enableViewOptions = false,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -65,10 +69,10 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div className="space-y-4">
+    <div className={`space-y-4`}>
       <div className="flex items-center gap-2">
         {children}
-        <DataTableViewOptions table={table} />
+        {enableViewOptions && <DataTableViewOptions table={table} />}
       </div>
       <div className="rounded-md border">
         <Table>
@@ -96,6 +100,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className={`${className}`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -111,7 +116,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center "
                 >
                   No results.
                 </TableCell>
