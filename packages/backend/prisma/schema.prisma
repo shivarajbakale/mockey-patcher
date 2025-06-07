@@ -10,23 +10,35 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model RuleCondition {
-  id        Int      @id @default(autoincrement())
-  ruleId    Int
-  condition String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  rule      Rule     @relation(fields: [ruleId], references: [id])
-}
+model Request {
+  id            Int      @id @default(autoincrement())
+  requestId     String   @unique
+  url           String
+  method        String
+  status        Int
+  duration      Int
+  responseBody  Json
+  requestBody   Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  startTime     Float
+  endTime       Float
+  numberOfBytes Float
 
-model Rule {
-  id         Int             @id @default(autoincrement())
-  name       String
-  conditions RuleCondition[]
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
+  // Indexes for better query performance
+  @@index([url])
+  @@index([method])
+  @@index([startTime])
+  @@index([endTime])
+  @@index([status])
+  // Composite indexes for common query patterns
+  @@index([url, method])
+  @@index([startTime, endTime])
+  @@index([method, status])
+  // Index for time-based queries with method
+  @@index([method, startTime, endTime])
 }

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Main } from "./components/main";
+import { useRequestsStore } from "./store/requests";
+import { ThemeProvider } from "../../components/utils/theme-provider";
+import { Toaster } from "@/components/atoms/sonner/sonner";
 
 export interface RequestMetadata {
   url: string;
@@ -8,7 +11,7 @@ export interface RequestMetadata {
   status: number;
   duration: number;
   responseBody: string;
-  id: string;
+  requestId: string;
   numberOfBytes: number;
   requestBody: string | chrome.devtools.network.Request["request"]["postData"];
   startTime: number;
@@ -16,11 +19,13 @@ export interface RequestMetadata {
 }
 
 const APITracker = () => {
-  const [requests, setRequests] = useState<RequestMetadata[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const { requests, addRequest, clearRequests, getMockedRequests } =
+    useRequestsStore();
 
   useEffect(() => {
     try {
+      getMockedRequests();
       const handleRequestFinished = (
         request: chrome.devtools.network.Request,
       ) => {
@@ -30,10 +35,17 @@ const APITracker = () => {
         ) {
           try {
             const url = new URL(request.request.url);
+
+            if (url.port === "3000") {
+              // do not track requests from the dev server
+              return;
+            }
+            const bodySize = request?.request?.bodySize;
             const pathname = url.origin + url.pathname;
             const postData = request?.request?.postData;
+            const stableId = `${request.request.method}::${pathname}:${bodySize}`;
+
             request.getContent((content) => {
-              // Calculate timing information
               const startTime = new Date(request.startedDateTime).getTime();
               const endTime = startTime + request.time;
 
@@ -44,13 +56,13 @@ const APITracker = () => {
                 duration: request.time,
                 responseBody: content,
                 requestBody: postData || null,
-                id: `${request.request.method}-${pathname}`,
+                requestId: stableId,
                 numberOfBytes: request.response.content.size || 0,
                 startTime,
                 endTime,
               };
 
-              setRequests((prev) => [...prev, requestMetadata]);
+              addRequest(requestMetadata);
             });
           } catch (err) {
             console.error("Error processing request:", err);
@@ -72,28 +84,27 @@ const APITracker = () => {
       console.error("Error setting up network listener:", err);
       setError("Error setting up network tracking");
     }
-  }, []);
+  }, [addRequest]);
 
   const onRefreshRequests = () => {
     // Clear existing requests
-    setRequests([]);
+    clearRequests();
     // Reload the inspected page
     chrome.devtools.inspectedWindow.reload({});
   };
 
-  const onClearRequests = () => {
-    setRequests([]);
-  };
-
   return (
-    <div className="p-4 bg-background h-[100vh]">
-      <Main
-        requests={requests}
-        error={error}
-        onClearRequests={onClearRequests}
-        onRefreshRequests={onRefreshRequests}
-      />
-    </div>
+    <ThemeProvider>
+      <Toaster />
+      <div className="p-4 overflow-hidden h-[calc(100vh)] bg-background text-foreground">
+        <Main
+          requests={requests}
+          error={error}
+          onClearRequests={clearRequests}
+          onRefreshRequests={onRefreshRequests}
+        />
+      </div>
+    </ThemeProvider>
   );
 };
 

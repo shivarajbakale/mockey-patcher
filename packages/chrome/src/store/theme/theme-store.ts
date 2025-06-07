@@ -10,7 +10,7 @@ interface ThemeState {
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      theme: "light",
+      theme: "dark",
       toggleTheme: () =>
         set((state) => ({
           theme: state.theme === "light" ? "dark" : "light",
@@ -19,8 +19,8 @@ export const useThemeStore = create<ThemeState>()(
     }),
     {
       name: "theme-storage",
-    }
-  )
+    },
+  ),
 );
 
 type TabValue = "todo-list" | "create-todo";
@@ -38,6 +38,6 @@ export const useCurrentTab = create<CurrentTabState>()(
     }),
     {
       name: "current-tab",
-    }
-  )
+    },
+  ),
 );

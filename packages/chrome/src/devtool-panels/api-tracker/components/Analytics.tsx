@@ -1,6 +1,6 @@
 import React from "react";
 import { Typography } from "@/components/atoms/typography/typography";
-import type { RequestMetadata } from "./main";
+import type { RequestMetadata } from "../api-tracker";
 import { ChartBarIcon, ClockIcon, TimerIcon } from "lucide-react";
 import { Card } from "@/components/atoms/card/card";
 import { formatBytes, formatDuration } from "../utils";
