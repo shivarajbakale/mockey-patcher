@@ -7,14 +7,33 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-redirector}
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
+
+  backend:
+    build:
+      context: .
+      target: development
+    container_name: redirector_backend
+    environment:
+      DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/redirector'
+      NODE_ENV: development
+      PORT: 3000
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: npm run dev
 
   pgadmin:
     image: dpage/pgadmin4
@@ -23,7 +42,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@admin.com}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
     ports:
-      - "5050:80"
+      - '5050:80'
     depends_on:
       - postgres
 

@@ -5,15 +5,21 @@
   "private": true,
   "scripts": {
     "dev": "nodemon src/app.ts",
+    "start": "node dist/app.js",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "build": "tsc",
-    "db:up": "docker compose up -d",
+    "db:up": "docker compose up -d postgres pgadmin",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v",
     "db:migrate": "prisma migrate dev",
     "db:generate": "prisma generate",
-    "setup": "npm run db:up && npm run db:migrate && npm run db:generate"
+    "setup": "npm run db:up && npm run db:migrate && npm run db:generate",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:build": "docker compose build",
+    "docker:logs": "docker compose logs -f backend",
+    "docker:restart": "docker compose restart backend"
   },
   "dependencies": {
     "@prisma/client": "^6.8.2",
