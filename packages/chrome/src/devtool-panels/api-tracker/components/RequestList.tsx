@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from "react";
-import type { ColumnDef } from "@tanstack/react-table";
+import React, { useCallback, useMemo, useState } from "react";
+import { type ColumnDef } from "@tanstack/react-table";
 
 import { DataTable } from "@/components/atoms/data-table/data-table";
 import { DataTableColumnHeader } from "@/components/atoms/data-table/data-table-column-header";
@@ -8,64 +8,97 @@ import { formatBytes, formatDuration, getMethodColor } from "../utils";
 import { Checkbox } from "@/components/atoms/checkbox/checkbox";
 import { useRequestsStore } from "../store/requests";
 import { Button } from "@/components/atoms/button/button";
-import { TargetIcon } from "lucide-react";
+import { FilterIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/atoms/tooltip/tooltip";
+import { MockSelectionDialog } from "@/components/molecules/mock-selection-dialog/mock-selection-dialog";
+import { getFilteredRequests } from "./utils";
+import { BulkActionsMenu } from "@/components/molecules/bulk-actions-menu/bulk-actions-menu";
+import { Badge } from "@/components/atoms/badge/badge";
 
 interface RequestListProps {
-  requests?: RequestMetadata[];
+  selectedRowsCount?: number;
 }
 
-const RequestListComponent = ({ requests = [] }: RequestListProps) => {
-  const selectedRequestIds = useRequestsStore(
-    (state) => state.selectedRequestIds,
-  );
-  const mockSelectedRequests = useRequestsStore(
-    (state) => state.mockSelectedRequests,
-  );
-  const setSelectedRequests = useRequestsStore(
-    (state) => state.setSelectedRequests,
-  );
-  const selectionState = useRequestsStore((state) => state.selectionState);
-  const isMocked = useRequestsStore((state) => state.isMocked);
+const RequestListComponent = ({ selectedRowsCount }: RequestListProps) => {
+  const {
+    selectedRequestIds,
+    setSelectedRequests,
+    requests,
+    isMocked,
+    filterCriteria,
+    mockSelectedRequests,
+  } = useRequestsStore();
+  const [showMockSelectionDialog, setShowMockSelectionDialog] = useState(false);
+
+  const filteredRequests = useMemo(() => {
+    return getFilteredRequests(requests, filterCriteria);
+  }, [requests, filterCriteria]);
 
   const handleRowSelection = useCallback(
     (request: RequestMetadata, checked: boolean) => {
-      if (isMocked(request.requestId)) return; // Don't allow selection of mocked requests
-
+      if (isMocked(request.requestId)) return;
+      const currentlySelected = requests.filter((r) =>
+        selectedRequestIds.has(r.requestId),
+      );
       if (checked) {
-        const newSelectedRequests = [
-          ...requests.filter((r) => selectedRequestIds.has(r.requestId)),
-          request,
-        ];
-        setSelectedRequests(newSelectedRequests);
+        setSelectedRequests([...currentlySelected, request]);
       } else {
-        const newSelectedRequests = requests.filter(
-          (r) =>
-            selectedRequestIds.has(r.requestId) &&
-            r.requestId !== request.requestId,
+        setSelectedRequests(
+          currentlySelected.filter((r) => r.requestId !== request.requestId),
         );
-        setSelectedRequests(newSelectedRequests);
       }
     },
-    [requests, setSelectedRequests, selectedRequestIds, isMocked],
+    [requests, selectedRequestIds, setSelectedRequests, isMocked],
   );
+
+  // Calculate selection state for UI
+  const selectionState = useMemo(() => {
+    const selectableRequests = filteredRequests.filter(
+      (r) => !isMocked(r.requestId),
+    );
+    const allSelected =
+      selectableRequests.length > 0 &&
+      selectableRequests.every((r) => selectedRequestIds.has(r.requestId));
+    const someSelected =
+      selectableRequests.some((r) => selectedRequestIds.has(r.requestId)) &&
+      !allSelected;
+    return { allSelected, someSelected };
+  }, [filteredRequests, selectedRequestIds, isMocked]);
 
   const handleSelectAll = useCallback(
     (checked: boolean) => {
-      // Filter out already mocked requests when selecting all
-      const selectableRequests = requests.filter((r) => !isMocked(r.requestId));
-      setSelectedRequests(checked ? selectableRequests : []);
-    },
-    [requests, setSelectedRequests, isMocked],
-  );
+      // Get currently selected requests that are not in the filtered view
+      const selectedNotInFilter = requests.filter(
+        (r) =>
+          selectedRequestIds.has(r.requestId) &&
+          !filteredRequests.find((fr) => fr.requestId === r.requestId),
+      );
 
-  const handleMockSelectedRequests = useCallback(() => {
-    const selectedRequests = requests.filter((request) =>
-      selectedRequestIds.has(request.requestId),
-    );
-    mockSelectedRequests(selectedRequests);
-    setSelectedRequests([]);
-  }, [requests, selectedRequestIds, mockSelectedRequests]);
+      if (checked) {
+        // Add all non-mocked requests from filtered list to existing selections
+        const selectableRequests = filteredRequests.filter(
+          (r) => !isMocked(r.requestId),
+        );
+        setSelectedRequests([...selectedNotInFilter, ...selectableRequests]);
+      } else {
+        // Keep only the selections that are not in the current filtered view
+        setSelectedRequests(selectedNotInFilter);
+      }
+    },
+    [
+      filteredRequests,
+      requests,
+      selectedRequestIds,
+      setSelectedRequests,
+      isMocked,
+    ],
+  );
 
   const columns = useMemo<ColumnDef<RequestMetadata>[]>(
     () => [
@@ -153,16 +186,41 @@ const RequestListComponent = ({ requests = [] }: RequestListProps) => {
         ),
         cell: ({ row }) => {
           const url = new URL(row.getValue("url"));
+          const fullUrl = url.origin + url.pathname;
           const isRequestMocked = isMocked(row.original.requestId);
-          return (
+          const maxUrlLength = 40;
+          const shouldShowTooltip = fullUrl.length > maxUrlLength;
+          const showRedirectionBadge = row.original.status === 307;
+
+          const urlDisplay = (
             <div
               className={cn(
                 "font-medium break-all",
                 isRequestMocked && "opacity-50",
               )}
             >
-              {url.origin + url.pathname}
+              {shouldShowTooltip
+                ? `${fullUrl.slice(0, maxUrlLength)}...`
+                : fullUrl}
             </div>
+          );
+
+          return shouldShowTooltip ? (
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>{urlDisplay}</TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-[500px] break-all">
+                    {showRedirectionBadge && (
+                      <Badge variant="destructive">Redirected</Badge>
+                    )}
+                    {fullUrl}{" "}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            urlDisplay
           );
         },
         size: 400,
@@ -219,29 +277,63 @@ const RequestListComponent = ({ requests = [] }: RequestListProps) => {
       handleRowSelection,
       selectionState,
       isMocked,
-      requests,
+      filteredRequests,
+      mockSelectedRequests,
     ],
   );
 
+  const handleBulkMock = async (requests: RequestMetadata[]) => {
+    mockSelectedRequests(requests);
+  };
+
   const tableContent = useMemo(() => {
-    const actionButton = (selectionState.someSelected ||
-      selectionState.allSelected) && (
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={handleMockSelectedRequests}
-      >
-        <TargetIcon className="w-4 h-4" />
-        Mock Selected Requests
-      </Button>
+    const actionButton = (
+      <div className="flex items-center gap-4 justify-end">
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={() => setShowMockSelectionDialog(true)}
+        >
+          <FilterIcon className="w-4 h-4" />
+          Apply Filters
+        </Button>
+      </div>
+    );
+
+    const selectedRequests = filteredRequests.filter((request) =>
+      selectedRequestIds.has(request.requestId),
     );
 
     return (
-      <DataTable columns={columns} data={requests}>
-        {actionButton}
-      </DataTable>
+      <div className="relative">
+        <DataTable
+          columns={columns}
+          data={filteredRequests}
+          selectedRowsCount={selectedRowsCount || 0}
+        >
+          {actionButton}
+        </DataTable>
+        <MockSelectionDialog
+          open={showMockSelectionDialog}
+          onOpenChange={setShowMockSelectionDialog}
+        />
+        <BulkActionsMenu
+          selectedItems={selectedRequests}
+          onAction={handleBulkMock}
+          getItemIdentifier={(item) => item.url}
+          actions="mock"
+        />
+      </div>
     );
-  }, [columns, requests, selectionState, handleMockSelectedRequests]);
+  }, [
+    columns,
+    filteredRequests,
+    selectionState,
+    selectedRowsCount,
+    showMockSelectionDialog,
+    setShowMockSelectionDialog,
+    selectedRequestIds,
+  ]);
 
   return tableContent;
 };

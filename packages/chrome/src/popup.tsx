@@ -1,29 +1,25 @@
-import React from 'react';
-import { sendToBackground } from '@plasmohq/messaging';
-
-import { Button } from './components/atoms/button/button';
-import './style.css';
+import React, { useEffect } from "react";
 
 function IndexPopup() {
-  const handleClick = async () => {
-    console.log('clicked');
+  useEffect(() => {
     try {
-      const res = await sendToBackground({
-        name: 'ping',
-        body: {
-          message: 'ping',
-        },
-      });
-      console.log('Response:', res);
+      // Open the tab page
+      chrome.tabs
+        .create({
+          url: chrome.runtime.getURL("tabs/tab-index.html"),
+        })
+        .catch((error) => {
+          console.error("Failed to open tab:", error);
+        });
+      // Close the popup
+      window.close();
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error in popup:", error);
     }
-  };
-  return (
-    <div className="w-[600px] h-[600px]" style={{ overflow: 'hidden', scrollbarWidth: 'none' }}>
-      <Button onClick={handleClick}>Click me</Button>
-    </div>
-  );
+  }, []);
+
+  // Return empty div instead of null for better React practices
+  return <div />;
 }
 
 export default IndexPopup;

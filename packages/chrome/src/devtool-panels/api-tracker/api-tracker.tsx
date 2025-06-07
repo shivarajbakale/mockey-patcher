@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Main } from "./components/main";
 import { useRequestsStore } from "./store/requests";
+import { ThemeProvider } from "../../components/utils/theme-provider";
+import { Toaster } from "@/components/atoms/sonner/sonner";
 
 export interface RequestMetadata {
   url: string;
@@ -33,12 +35,17 @@ const APITracker = () => {
         ) {
           try {
             const url = new URL(request.request.url);
+
+            if (url.port === "3000") {
+              // do not track requests from the dev server
+              return;
+            }
+            const bodySize = request?.request?.bodySize;
             const pathname = url.origin + url.pathname;
             const postData = request?.request?.postData;
-            const stableId = `${request.request.method}::${pathname}`;
+            const stableId = `${request.request.method}::${pathname}:${bodySize}`;
 
             request.getContent((content) => {
-              // Calculate timing information
               const startTime = new Date(request.startedDateTime).getTime();
               const endTime = startTime + request.time;
 
@@ -87,14 +94,17 @@ const APITracker = () => {
   };
 
   return (
-    <div className="p-4 bg-background h-[100vh]">
-      <Main
-        requests={requests}
-        error={error}
-        onClearRequests={clearRequests}
-        onRefreshRequests={onRefreshRequests}
-      />
-    </div>
+    <ThemeProvider>
+      <Toaster />
+      <div className="p-4 overflow-hidden h-[calc(100vh)] bg-background text-foreground">
+        <Main
+          requests={requests}
+          error={error}
+          onClearRequests={clearRequests}
+          onRefreshRequests={onRefreshRequests}
+        />
+      </div>
+    </ThemeProvider>
   );
 };
 

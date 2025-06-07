@@ -14,25 +14,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model RuleCondition {
-  id        Int      @id @default(autoincrement())
-  ruleId    Int
-  condition String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  rule      Rule     @relation(fields: [ruleId], references: [id])
-}
-
-model Rule {
-  id         Int             @id @default(autoincrement())
-  name       String
-  conditions RuleCondition[]
-  createdAt  DateTime        @default(now())
-  updatedAt  DateTime        @updatedAt
-}
-
 model Request {
-  id            String   @id @default(cuid())
+  id            Int      @id @default(autoincrement())
   requestId     String   @unique
   url           String
   method        String

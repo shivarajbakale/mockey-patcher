@@ -1,3 +1,4 @@
+import React from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "../atoms/button/button";
 import { useThemeStore } from "@store/theme/theme-store";

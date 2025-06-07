@@ -24,14 +24,13 @@ import {
 } from "@/components/atoms/table/table";
 
 import { DataTablePagination } from "./data-table-pagination";
-import { DataTableViewOptions } from "./data-table-view-options";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   children?: React.ReactNode;
   className?: string;
-  enableViewOptions?: boolean;
+  selectedRowsCount?: number;
 }
 
 export function DataTable<TData, TValue>({
@@ -39,7 +38,7 @@ export function DataTable<TData, TValue>({
   data,
   children,
   className,
-  enableViewOptions = false,
+  selectedRowsCount = 0,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -70,13 +69,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={`space-y-4`}>
-      <div className="flex items-center gap-2">
-        {children}
-        {enableViewOptions && <DataTableViewOptions table={table} />}
-      </div>
-      <div className="rounded-md border">
+      <div>{children}</div>
+      <div className="rounded-md border overflow-auto max-h-[500px]">
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 bg-background">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -125,7 +121,10 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        selectedRowsCount={selectedRowsCount}
+      />
     </div>
   );
 }

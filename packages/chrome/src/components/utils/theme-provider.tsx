@@ -9,11 +9,29 @@ interface ThemeProviderProps {
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const { theme } = useThemeStore();
 
-  useEffect(() => {
+  // Function to update theme classes
+  const updateTheme = (newTheme: string) => {
     const root = document.documentElement;
+    const body = document.body;
+
+    // Remove both themes from both elements
     root.classList.remove("light", "dark");
-    root.classList.add(theme);
+    body.classList.remove("light", "dark");
+
+    // Add the new theme to both elements
+    root.classList.add(newTheme);
+    body.classList.add(newTheme);
+  };
+
+  // Initialize theme on mount
+  useEffect(() => {
+    updateTheme(theme);
+  }, []);
+
+  // Update theme when it changes
+  useEffect(() => {
+    updateTheme(theme);
   }, [theme]);
 
-  return <div className={theme}>{children}</div>;
+  return <>{children}</>;
 }

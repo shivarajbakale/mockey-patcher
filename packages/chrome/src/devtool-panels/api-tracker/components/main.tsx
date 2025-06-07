@@ -4,7 +4,7 @@ import { RequestList } from "./RequestList";
 import { MockedList } from "./MockedList";
 import { Analytics } from "./Analytics";
 import { Button } from "@/components/atoms/button/button";
-import { RefreshCcwIcon, TrashIcon } from "lucide-react";
+import { ChartBarIcon, RefreshCcwIcon, TrashIcon } from "lucide-react";
 import { useRequestsStore } from "../store/requests";
 import {
   Tabs,
@@ -13,6 +13,7 @@ import {
   TabsTrigger,
 } from "@/components/atoms/tabs/tabs";
 import type { RequestMetadata } from "../api-tracker";
+import { ThemeToggle } from "@/components/utils/theme-toggle";
 
 interface MainProps {
   requests: RequestMetadata[];
@@ -47,50 +48,42 @@ const Main: React.FC<MainProps> = ({
     onClearRequests();
   };
 
-  const clearAllRules = () => {
-    chrome.declarativeNetRequest.getDynamicRules((rules) => {
-      chrome.declarativeNetRequest.updateDynamicRules(
-        {
-          removeRuleIds: rules.map((rule) => rule.id),
-        },
-        () => {
-          console.log("Rules removed");
-        },
-      );
-    });
-  };
-
   const handleDeleteAllMocks = () => {
     deleteAllMocks();
+  };
+
+  const handleTamperRequests = () => {
+    chrome.tabs.create({
+      url: "../../../tabs/tab-index.html",
+    });
   };
 
   return (
     <div className="p-4">
       <div className="flex justify-between items-center mb-4">
-        <Typography variant="h4">Mocky Balboa</Typography>
-        {selectedRequestsCount > 0 && (
-          <Typography variant="small" className="text-muted-foreground">
-            {selectedRequestsCount} requests selected
-          </Typography>
-        )}
+        <Typography variant="h4">Mockey Patcher</Typography>
+        <ThemeToggle />
       </div>
-      <div className="flex gap-2">
-        <Button variant="outline" size="sm" onClick={onRefreshPlugin}>
-          <RefreshCcwIcon className="w-4 h-4" />
-          Refresh
-        </Button>
-        <Button variant="outline" size="sm" onClick={onRefreshRequests}>
-          <RefreshCcwIcon className="w-4 h-4" />
-          Recalculate
-        </Button>
-        <Button variant="outline" size="sm" onClick={handleClearRequests}>
-          <TrashIcon className="w-4 h-4" />
-          Clear
-        </Button>
-        <Button variant="outline" size="sm" onClick={clearAllRules}>
-          <TrashIcon className="w-4 h-4" />
-          Clear all rules
-        </Button>
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={onRefreshPlugin}>
+            <RefreshCcwIcon className="w-4 h-4" />
+            Refresh
+          </Button>
+          <Button variant="outline" size="sm" onClick={onRefreshRequests}>
+            <ChartBarIcon className="w-4 h-4" />
+            Profile Requests
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleClearRequests}>
+            <TrashIcon className="w-4 h-4" />
+            Clear logs
+          </Button>
+        </div>
+        <div>
+          <Button variant="secondary" size="sm" onClick={handleTamperRequests}>
+            Tamper Requests
+          </Button>
+        </div>
       </div>
       <div className="flex justify-between items-center mb-4">
         <Analytics requests={requests} />
@@ -102,7 +95,7 @@ const Main: React.FC<MainProps> = ({
         </TabsList>
         <TabsContent value="all-requests" className="flex-grow">
           <div className="h-[calc(100vh-220px)] overflow-hidden">
-            <RequestList requests={requests} />
+            <RequestList selectedRowsCount={selectedRequestsCount} />
           </div>
         </TabsContent>
         <TabsContent value="mock-requests" className="flex-grow">
@@ -110,6 +103,7 @@ const Main: React.FC<MainProps> = ({
             <MockedList
               requests={mockedRequests}
               onDeleteAllMocks={handleDeleteAllMocks}
+              selectedRowsCount={selectedRequestsCount}
             />
           </div>
         </TabsContent>

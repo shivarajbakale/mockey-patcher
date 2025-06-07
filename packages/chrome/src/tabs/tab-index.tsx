@@ -1,27 +1,43 @@
-import React from 'react';
-import '../style.css';
+import React, { useEffect } from "react";
+import { HashRouter, Routes, Route, Link } from "react-router-dom";
+import "../style.css";
+import { Header } from "@/components/atoms/header/header";
+import { useRequestsStore } from "@/devtool-panels/api-tracker/store/requests";
+import { MockedRequests } from "./components/MockedRequests";
+import { Button } from "@/components/atoms/button/button";
+import { EditMock } from "./components/EditMock";
+import { Toaster } from "@/components/atoms/sonner/sonner";
 
-function HelloWorld() {
+function TabIndex() {
+  const { getMockedRequests } = useRequestsStore();
+
+  useEffect(() => {
+    try {
+      getMockedRequests();
+    } catch (error) {
+      console.error("Error fetching mocked requests:", error);
+    }
+  }, [getMockedRequests]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-8">
-      <div className="text-center max-w-md">
-        <h1 className="text-2xl font-bold mb-6">Firebase Not Configured</h1>
-        <p className="text-gray-600 mb-4">
-          Please set up your Firebase environment variables in{' '}
-          <code className="bg-gray-100 px-2 py-1 rounded">.env</code> file.
-        </p>
-        <p className="text-sm text-gray-500 mb-6">
-          Check the <code className="bg-gray-100 px-1 rounded">checklist.md</code> for setup
-          instructions.
-        </p>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <p className="text-sm text-yellow-800">
-            💡 After setting up your environment variables, refresh this page.
-          </p>
+    <HashRouter>
+      <Toaster />
+      <div className="flex flex-col h-full">
+        <Header />
+        <div className="container mt-4">
+          <div className="flex gap-4 mb-4">
+            <Link to="/">
+              <Button variant="outline">Mocked Requests</Button>
+            </Link>
+          </div>
+          <Routes>
+            <Route path="/" element={<MockedRequests />} />
+            <Route path="/edit/:id" element={<EditMock />} />
+          </Routes>
         </div>
       </div>
-    </div>
+    </HashRouter>
   );
 }
 
-export default HelloWorld;
+export default TabIndex;

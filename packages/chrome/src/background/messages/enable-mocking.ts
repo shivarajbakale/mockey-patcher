@@ -4,8 +4,8 @@ import type { PlasmoMessaging } from "@plasmohq/messaging";
 type Rule = chrome.declarativeNetRequest.Rule;
 
 export function generateRulesFromList(list: MockedRequest[]): Rule[] {
-  return list.map((entry, index) => ({
-    id: index + 1,
+  return list.map((entry) => ({
+    id: Number(entry.id),
     priority: 1,
     action: {
       type: chrome.declarativeNetRequest.RuleActionType.REDIRECT,
@@ -37,7 +37,6 @@ const handler: PlasmoMessaging.MessageHandler<
 > = async (req, res) => {
   const { requests } = req.body;
   const rules = generateRulesFromList(requests);
-  console.log("These are the rules", rules);
   chrome.declarativeNetRequest.updateDynamicRules(
     {
       addRules: rules,
