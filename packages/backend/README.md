@@ -1,38 +1,56 @@
-# backend
+# Redirector Backend API
 
-A React + Vite project with mock network capabilities
+A Node.js/Express backend service that provides API endpoints for the Redirector Chrome extension. Built with TypeScript, Prisma ORM, and PostgreSQL for managing URL redirection rules.
 
-## Getting Started
+## 🚀 Features
 
-1. Install dependencies:
+- **RESTful API**: Complete CRUD operations for redirection rules
+- **Database Management**: PostgreSQL with Prisma ORM
+- **Docker Integration**: Containerized database setup
+- **CORS Support**: Cross-origin resource sharing for browser extension
+- **Development Tools**: Hot reloading with Nodemon
+- **Type Safety**: Full TypeScript implementation
+
+## 🛠️ Tech Stack
+
+- Node.js with TypeScript
+- Express.js
+- PostgreSQL (Docker)
+- Prisma ORM
+- CORS, Morgan (logging), Cookie Parser
+- Nodemon for hot reloading
+
+## 🚀 Quick Setup
+
+1. **Install dependencies:**
    ```bash
    npm install
    ```
 
-2. Start the development server:
+2. **Start database and setup:**
+   ```bash
+   npm run setup
+   ```
+
+3. **Start development server:**
    ```bash
    npm run dev
    ```
+   Server will be available at `http://localhost:3000`
 
-3. Build for production:
-   ```bash
-   npm run build
-   ```
+## 🗄️ Database
 
-## Features
+PostgreSQL running in Docker:
+- **Database**: `redirector_db`
+- **Port**: `5432`
+- **Username**: `postgres`
+- **Password**: `password`
 
-- Express setup
-- TypeScript support
-- ESLint + Prettier configuration
-- Vitest setup for testing
 
-## Available Scripts
+## 👨‍💻 Author
 
-- `npm run dev`: Start development server
-- `npm run build`: Build for production
-- `npm run lint`: Run ESLint
-- `npm run format`: Format code with Prettier
+**Shivaraj Bakale**
 
-## Author
+---
 
-Shivaraj Bakale
+For Chrome extension setup and usage, see the [Chrome extension README](../chrome/README.md).

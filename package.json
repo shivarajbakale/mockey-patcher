@@ -9,8 +9,17 @@
   ],
   "scripts": {
     "backend:dev": "yarn workspace backend dev",
+    "backend:build": "yarn workspace backend build",
     "chrome:dev": "yarn workspace chrome dev",
-    "dev": "concurrently \"yarn backend:dev\" \"yarn chrome:dev\""
+    "chrome:build": "yarn workspace chrome build",
+    "dev": "concurrently \"yarn backend:dev\" \"yarn chrome:dev\"",
+    "build": "concurrently \"yarn backend:build\" \"yarn chrome:build\"",
+    "start": "node scripts/start.js",
+    "prestart": "node scripts/prestart.js",
+    "submodule:init": "git submodule update --init --recursive",
+    "submodule:update": "git submodule update --recursive --remote",
+    "submodule:pull": "git pull --recurse-submodules",
+    "setup": "yarn submodule:init && yarn install && yarn build"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
