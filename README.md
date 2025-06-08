@@ -34,7 +34,7 @@ This project uses Git submodules for managing the Chrome extension and backend c
 ### Initial Setup
 ```bash
 # Clone the main repository with submodules
-git clone --recursive https://github.com/YOUR_USERNAME/redirector-app.git
+git clone --recursive https://github.com/shivarajbakale/redirector-app.git
 
 # Or if already cloned, initialize submodules
 yarn submodule:init
