@@ -1,9 +1,0 @@
-[submodule "packages/chrome"]
-	path = packages/chrome
-	url = https://github.com/YOUR_USERNAME/redirector-chrome.git
-	branch = main
-
-[submodule "packages/backend"]
-	path = packages/backend
-	url = https://github.com/YOUR_USERNAME/redirector-backend.git
-	branch = main 
