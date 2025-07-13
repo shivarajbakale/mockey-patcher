@@ -19,10 +19,7 @@
     "logs": "yarn workspace backend docker:logs",
     "down": "yarn workspace backend docker:down",
     "prestart": "node scripts/prestart.js",
-    "submodule:init": "git submodule update --init --recursive",
-    "submodule:update": "git submodule update --recursive --remote",
-    "submodule:pull": "git pull --recurse-submodules",
-    "setup": "yarn submodule:init && yarn install && yarn start:docker"
+    "setup": "yarn install && yarn start:docker"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
