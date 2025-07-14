@@ -73,7 +73,6 @@ console.log('🎉 Setup completed successfully!');
 console.log('📋 Summary:');
 console.log('   • Chrome extension built for production');
 console.log('   • PostgreSQL database container running on port 5432');
-console.log('   • pgAdmin running on port 5050');
 console.log('   • Database migrations applied');
 console.log('   • Prisma client generated');
 console.log('   • Backend compiled');

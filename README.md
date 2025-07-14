@@ -1,66 +1,51 @@
-# Redirector App
+# Mockey Patcher - API Request Mocking System
 
-A Chrome extension with a backend service for managing URL redirections.
+A comprehensive Chrome extension with backend service for intelligent API request mocking, real-time network monitoring, and seamless development workflows.
 
-## 🚀 Quick Start (One Command)
-
-Get everything up and running from a fresh clone:
+## 🚀 Quick Start
 
 ```bash
-yarn setup
+yarn setup    # Complete setup with Docker containers
+yarn start    # Start all services
 ```
 
-This will:
-1. Initialize and update all submodules
-2. Install all dependencies
-3. Start the backend API in a Docker container
-4. Start PostgreSQL database in a container  
-5. Start pgAdmin in a container
-6. Show real-time logs
+## 🏗️ How It Works
 
-## 🚀 Alternative: Local Development
+![High-Level Workflow](./assets/diagram.png)
 
-If you prefer to run the backend locally:
+## 🏛️ Technical Architecture
 
-```bash
-yarn install     # Install dependencies
-yarn start       # Start with local backend
-```
+![System Architecture](./assets/mermaid.png)
 
-## 📦 Submodule Management
+## 📋 Core Components
 
-This project uses Git submodules for managing the Chrome extension and backend components. Here's how to work with them:
+### Chrome Extension (`packages/chrome/`)
+- **Background Script**: Manages Chrome APIs and message routing
+- **DevTools Panel**: Real-time network monitoring and request capture
+- **Dashboard Tab**: Full-featured interface for managing mocks and groups
 
-### Initial Setup
-```bash
-# Clone the main repository with submodules
-git clone --recursive https://github.com/shivarajbakale/redirector-app.git
+### Backend Service (`packages/backend/`)
+- **REST API**: Node.js/Express server for data management
+- **Database**: PostgreSQL with Prisma ORM
+- **CLI Tools**: Command-line interface for service management
+- **Docker Setup**: Containerized deployment
 
-# Or if already cloned, initialize submodules
-yarn submodule:init
-```
+## 🔄 Workflow
 
-### Updating Submodules
-```bash
-# Pull latest changes for all submodules
-yarn submodule:pull
+1. **Capture**: Extension monitors network requests in DevTools
+2. **Store**: Requests are saved to PostgreSQL database via REST API
+3. **Mock**: Create mock responses for captured requests
+4. **Group**: Organize related requests into logical groups
+5. **Activate**: Enable/disable mocks using Chrome's redirect rules
+6. **Intercept**: Chrome redirects matching requests to mock responses
 
-# Update submodules to their latest remote versions
-yarn submodule:update
-```
+## 📦 What Gets Started
 
-### Working with Submodules
-1. Changes in submodules should be committed and pushed from their respective directories
-2. After updating submodules, run `yarn build` to rebuild all packages
-3. The main repository needs to be updated when submodule references change
+After running `yarn setup`:
 
-## 📋 What Gets Started
-
-After running `yarn setup`, you'll have:
-
-- **Backend API**: Running in Docker container on `http://localhost:3000`
-- **PostgreSQL Database**: Running in Docker container on `localhost:5432`
-- **pgAdmin**: Web interface on `http://localhost:5050`
+- **Backend API**: `http://localhost:3000`
+- **PostgreSQL Database**: `localhost:5432`
+- **pgAdmin Interface**: `http://localhost:5050`
   - Email: `admin@admin.com`
   - Password: `admin`
 - **Chrome Extension**: Build available in `packages/chrome/build/`
@@ -79,88 +64,54 @@ redirector-app/
 ## 🔧 Available Scripts
 
 ### Docker Commands (Recommended)
-- `yarn start:docker` - **Start all services in Docker containers**
+- `yarn start:docker` - Start all services in Docker containers
 - `yarn logs` - View backend container logs
 - `yarn down` - Stop all Docker containers
 
 ### Local Development
 - `yarn setup` - Complete setup with submodules
 - `yarn start` - Start with local backend
-- `yarn dev` - Development mode with local backend
-- `yarn build` - Build both chrome extension and backend
+- `yarn dev` - Development mode
+- `yarn build` - Build all packages
 
 ### Submodule Management
 - `yarn submodule:init` - Initialize submodules
 - `yarn submodule:update` - Update submodules to latest
-- `yarn submodule:pull` - Pull latest changes for submodules
+- `yarn submodule:pull` - Pull latest changes
 
-## 🛠️ Manual Setup (if needed)
+## 🛠️ Tech Stack
 
-If you need to set up components individually:
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Plasmo Framework
+- **Backend**: Node.js, Express, Prisma ORM
+- **Database**: PostgreSQL
+- **Infrastructure**: Docker, Docker Compose
+- **State Management**: Zustand
+- **UI Components**: Radix UI, Shadcn/ui
 
-### Backend Setup (Docker)
-```bash
-cd packages/backend
-npm run docker:up      # Start all containers
-npm run docker:logs    # View logs
-npm run docker:down    # Stop containers
-```
+## 🎯 Key Features
 
-### Backend Setup (Local)
-```bash
-cd packages/backend
-npm run db:up          # Start Docker containers
-npm run db:migrate     # Run database migrations
-npm run db:generate    # Generate Prisma client
-npm run dev           # Start development server
-```
-
-### Chrome Extension Setup
-```bash
-cd packages/chrome
-yarn build         # Build for production
-yarn dev          # Start development mode
-```
-
-## 🔄 Stopping Services
-
-### Docker Services
-```bash
-yarn down  # Stop all Docker containers
-```
-
-### Local Services
-1. Press `Ctrl+C` in the terminal running the backend
-2. To stop Docker containers: `cd packages/backend && npm run db:down`
-
-## 📚 Development
-
-- **Backend**: Built with Node.js, Express, and Prisma ORM (fully containerized)
-- **Database**: PostgreSQL running in Docker
-- **Chrome Extension**: Built with Plasmo framework
-- **Package Management**: Yarn workspaces
+- **Real-time Network Monitoring**: Capture HTTP requests in DevTools
+- **Intelligent Mocking**: Create and manage mock responses
+- **Group Management**: Organize requests into logical groups
+- **Volatile Parameter Handling**: Smart URL pattern matching
+- **Persistent Storage**: PostgreSQL database with full CRUD operations
+- **Context Menu Integration**: Quick access from any page
+- **CLI Management**: Command-line tools for service control
 
 ## 🐛 Troubleshooting
 
 **Docker Issues:**
-- Ensure Docker is running and has sufficient resources
-- If containers fail to start: `yarn down` then `yarn start:docker`
-- Check container logs: `yarn backend:docker:logs`
+- Ensure Docker is running: `yarn down` then `yarn start:docker`
+- Check logs: `yarn logs`
 
 **Submodule Issues:**
-- If submodules are empty: `yarn submodule:init`
-- If submodules are outdated: `yarn submodule:update`
-- For merge conflicts in submodules: Resolve in the submodule directory first
+- Empty submodules: `yarn submodule:init`
+- Outdated submodules: `yarn submodule:update`
 
-**Database connection issues:**
-- Ensure Docker is running
-- Check if port 5432 is available
-- Try `yarn down` then restart with `yarn start:docker`
+**Database Issues:**
+- Ensure port 5432 is available
+- Check pgAdmin at `http://localhost:5050`
 
-**Chrome extension not loading:**
-- Check that the build completed successfully
-- Load the extension from `packages/chrome/build/` in Chrome
+## 👨‍💻 Author
 
-**Backend not starting:**
-- With Docker: Check `yarn backend:docker:logs` for errors
-- With Local: Ensure all dependencies are installed and database is running 
+**Shivaraj Bakale** - shivarajapple@gmail.com 

@@ -9,7 +9,6 @@ console.log('🚀 Starting Redirector App Backend...\n');
 console.log('🌟 Starting backend server...');
 console.log('📍 Backend will be available at: http://localhost:3000');
 console.log('🗄️  Database (PostgreSQL) running on: localhost:5432');
-console.log('🔧 pgAdmin available at: http://localhost:5050');
 console.log('📱 Chrome extension build available in: packages/chrome/build\n');
 
 console.log('🔄 Starting backend server...');
