@@ -53,7 +53,6 @@ After running `yarn setup`:
 
 - **Backend API**: `http://localhost:3000`
 - **PostgreSQL Database**: `localhost:5432`
-- **pgAdmin Interface**: `http://localhost:5050`
   - Email: `admin@admin.com`
   - Password: `admin`
 - **Chrome Extension**: Build available in `packages/chrome/build/`
