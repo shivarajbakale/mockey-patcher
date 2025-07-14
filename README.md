@@ -19,11 +19,11 @@ Visit our [GitHub Pages site](https://shivarajbakale.github.io/redirector-app/) 
 
 ## 🏗️ How It Works
 
-![High-Level Workflow](./diagram.png)
+![High-Level Workflow](./assets/diagram.png)
 
 ## 🏛️ Technical Architecture
 
-![System Architecture](./mermaid.png)
+![System Architecture](./assets/mermaid.png)
 
 ## 📋 Core Components
 
