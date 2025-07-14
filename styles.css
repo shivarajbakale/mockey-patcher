@@ -1,0 +1,363 @@
+:root {
+  --primary-color: #3498db;
+  --secondary-color: #2c3e50;
+  --accent-color: #e74c3c;
+  --text-color: #333;
+  --light-bg: #f8f9fa;
+  --dark-bg: #2c3e50;
+  --card-bg: #fff;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+    'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--light-bg);
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header */
+header {
+  background-color: var(--dark-bg);
+  color: white;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.tagline {
+  font-size: 1rem;
+  opacity: 0.8;
+  margin-bottom: 15px;
+}
+
+nav ul {
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+}
+
+nav ul li {
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition);
+}
+
+nav ul li a:hover {
+  color: var(--primary-color);
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  padding: 80px 0;
+  text-align: center;
+}
+
+.hero-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.btn.primary {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.btn.secondary {
+  background-color: transparent;
+  color: white;
+  border: 2px solid white;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--box-shadow);
+}
+
+/* Features Section */
+.features {
+  padding: 80px 0;
+  background-color: white;
+}
+
+.features h2 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 2rem;
+  color: var(--secondary-color);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.feature-card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
+  text-align: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  margin-bottom: 15px;
+  color: var(--secondary-color);
+}
+
+/* Architecture Section */
+.architecture {
+  padding: 80px 0;
+  background-color: var(--light-bg);
+}
+
+.architecture h2 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 2rem;
+  color: var(--secondary-color);
+}
+
+.architecture-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.architecture-image,
+.workflow-image {
+  max-width: 100%;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.architecture-image img,
+.workflow-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Installation Section */
+.installation {
+  padding: 80px 0;
+  background-color: white;
+}
+
+.installation h2 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 2rem;
+  color: var(--secondary-color);
+}
+
+.installation-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+.step {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 30px;
+  box-shadow: var(--box-shadow);
+}
+
+.step h3 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+}
+
+.step pre {
+  background-color: var(--light-bg);
+  padding: 15px;
+  border-radius: var(--border-radius);
+  overflow-x: auto;
+  margin-top: 15px;
+}
+
+.step a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.step a:hover {
+  text-decoration: underline;
+}
+
+/* Footer */
+footer {
+  background-color: var(--dark-bg);
+  color: white;
+  padding: 30px 0;
+  text-align: center;
+}
+
+footer .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--primary-color);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header {
+    padding: 15px 0;
+  }
+
+  nav ul {
+    margin-top: 15px;
+  }
+
+  nav ul li {
+    margin-bottom: 10px;
+  }
+
+  .hero {
+    padding: 60px 0;
+  }
+
+  .hero-content h2 {
+    font-size: 2rem;
+  }
+
+  .feature-grid,
+  .installation-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Privacy Policy Page */
+.privacy-policy {
+  padding: 60px 0;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.privacy-policy h1 {
+  color: var(--secondary-color);
+  margin-bottom: 30px;
+}
+
+.privacy-policy h2 {
+  color: var(--primary-color);
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.privacy-policy h3 {
+  color: var(--secondary-color);
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.privacy-policy p,
+.privacy-policy ul {
+  margin-bottom: 20px;
+}
+
+.privacy-policy ul {
+  padding-left: 20px;
+}
+
+.privacy-policy a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.privacy-policy a:hover {
+  text-decoration: underline;
+}
