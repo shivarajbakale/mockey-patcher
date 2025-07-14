@@ -88,7 +88,7 @@ redirector-app/
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS, Plasmo Framework
+- **Frontend**: React 18, TypeScript, Tailwind CSS
 - **Backend**: Node.js, Express, Prisma ORM
 - **Database**: PostgreSQL
 - **Infrastructure**: Docker, Docker Compose
