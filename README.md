@@ -9,13 +9,21 @@ yarn setup    # Complete setup with Docker containers
 yarn start    # Start all services
 ```
 
+## 🌐 Project Website
+
+Visit our [GitHub Pages site](https://shivarajbakale.github.io/redirector-app/) for more information about Mockey Patcher, including:
+- Detailed feature overview
+- System architecture diagrams
+- Installation instructions
+- Privacy policy
+
 ## 🏗️ How It Works
 
-![High-Level Workflow](./assets/diagram.png)
+![High-Level Workflow](./diagram.png)
 
 ## 🏛️ Technical Architecture
 
-![System Architecture](./assets/mermaid.png)
+![System Architecture](./mermaid.png)
 
 ## 📋 Core Components
 
