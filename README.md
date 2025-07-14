@@ -11,7 +11,7 @@ yarn start    # Start all services
 
 ## 🌐 Project Website
 
-Visit our [GitHub Pages site](https://shivarajbakale.github.io/redirector-app/) for more information about Mockey Patcher, including:
+Visit our [GitHub Pages site](https://shivarajbakale.github.io/mockey-patcher/) for more information about Mockey Patcher, including:
 - Detailed feature overview
 - System architecture diagrams
 - Installation instructions
