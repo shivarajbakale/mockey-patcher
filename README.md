@@ -9,6 +9,35 @@ yarn setup    # Complete setup with Docker containers
 yarn start    # Start all services
 ```
 
+## 🏁 Getting Started Checklist
+
+1. **Set up the backend**
+   - Install Docker and Docker Compose
+   - Set the environment variables:
+     ```
+     export BACKEND_PORT=3000
+     export POSTGRES_PORT=5432
+     ```
+   - Run `docker-compose -f docker-compose.public.yml up -d`
+   - Verify backend is running at http://localhost:3000
+
+2. **Install the Chrome Extension**
+   - Download the extension from the [Releases page](https://github.com/shivarajbakale/mockey-patcher/releases) assets
+   - Open Chrome and go to `chrome://extensions`
+   - Enable "Developer mode"
+   - Drag and drop the downloaded .zip file into the extensions page
+   - Verify the extension icon appears in your toolbar
+
+3. **Configure the extension**
+   - Click the extension icon
+   - Set backend URL to http://localhost:3000
+   - Create your first mock or rule group
+
+4. **Start using the extension**
+   - Open Chrome DevTools
+   - Navigate to the "Mockey Patcher" panel
+   - Begin tracking and mocking API requests
+
 ## 🌐 Project Website
 
 Visit our [GitHub Pages site](https://shivarajbakale.github.io/mockey-patcher/) for more information about Mockey Patcher, including:
