@@ -13,16 +13,21 @@ yarn start    # Start all services
 
 1. **Set up the backend**
    - Install Docker and Docker Compose
+   - Download the [docker-compose.public.yml](https://github.com/shivarajbakale/mockey-patcher/releases/download/v1.0.0/docker-compose.public.yml) file from the Releases page
+   - Create a new directory for the project and place the downloaded file in it
    - Set the environment variables:
      ```
      export BACKEND_PORT=3000
      export POSTGRES_PORT=5432
      ```
-   - Run `docker-compose -f docker-compose.public.yml up -d`
+   - Navigate to the directory containing the docker-compose file and run:
+     ```
+     docker-compose -f docker-compose.public.yml up -d
+     ```
    - Verify backend is running at http://localhost:3000
 
 2. **Install the Chrome Extension**
-   - Download the extension from the [Releases page](https://github.com/shivarajbakale/mockey-patcher/releases) assets
+   - Download the extension [mockey-patcher.zip](https://github.com/shivarajbakale/mockey-patcher/releases/download/v1.0.0/mockey-patcher.zip) from the Releases page
    - Open Chrome and go to `chrome://extensions`
    - Enable "Developer mode"
    - Drag and drop the downloaded .zip file into the extensions page
