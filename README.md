@@ -27,7 +27,7 @@ yarn start    # Start all services
    - Verify backend is running at http://localhost:3000
 
 2. **Install the Chrome Extension**
-   - Download the extension [mockey-patcher.zip](https://github.com/shivarajbakale/mockey-patcher/releases/download/v1.0.0/mockey-patcher.zip) from the Releases page
+   - Download the extension [chrome-mv3-prod.zip](https://github.com/shivarajbakale/mockey-patcher/releases/download/v1.0.0/chrome-mv3-prod.zip) from the Releases page
    - Open Chrome and go to `chrome://extensions`
    - Enable "Developer mode"
    - Drag and drop the downloaded .zip file into the extensions page
@@ -155,4 +155,4 @@ redirector-app/
 
 ## 👨‍💻 Author
 
-**Shivaraj Bakale** - shivarajapple@gmail.com 
+**Shivaraj Bakale** - shivarajapple@gmail.com
