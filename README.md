@@ -2,13 +2,6 @@
 
 A comprehensive Chrome extension with backend service for intelligent API request mocking, real-time network monitoring, and seamless development workflows.
 
-## 🚀 Quick Start
-
-```bash
-yarn setup    # Complete setup with Docker containers
-yarn start    # Start all services
-```
-
 ## 🏁 Getting Started Checklist
 
 1. **Set up the backend**
