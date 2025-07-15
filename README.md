@@ -151,7 +151,6 @@ redirector-app/
 
 **Database Issues:**
 - Ensure port 5432 is available
-- Check pgAdmin at `http://localhost:5050`
 
 ## 👨‍💻 Author
 
