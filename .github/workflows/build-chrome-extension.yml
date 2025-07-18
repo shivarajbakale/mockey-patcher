@@ -32,18 +32,60 @@ jobs:
       - name: Install dependencies
         run: yarn install
         
+      - name: Get current version
+        id: get-version
+        run: |
+          cd packages/chrome
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
+        
       - name: Build Chrome extension
         run: |
           cd packages/chrome
           yarn build:ship
           
-      - name: Rename and move zip file
+      - name: Prepare release assets
         run: |
+          VERSION=${{ steps.get-version.outputs.version }}
           mkdir -p artifacts
-          cp packages/chrome/build/chrome-mv3-prod.zip artifacts/mockey-patcher.zip
+          cp packages/chrome/build/chrome-mv3-prod.zip artifacts/mockey-patcher-v$VERSION.zip
+          cp docker-compose.public.yml artifacts/
       
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: chrome-extension
-          path: artifacts/mockey-patcher.zip 
+          name: release-assets
+          path: artifacts/
+          
+      - name: Check for existing release
+        id: check-release
+        run: |
+          VERSION=${{ steps.get-version.outputs.version }}
+          RELEASE_EXISTS=$(gh release view v$VERSION > /dev/null 2>&1 && echo "true" || echo "false")
+          echo "exists=$RELEASE_EXISTS" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Delete existing release
+        if: steps.check-release.outputs.exists == 'true'
+        run: |
+          VERSION=${{ steps.get-version.outputs.version }}
+          echo "Deleting existing release v$VERSION"
+          gh release delete v$VERSION --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create GitHub Release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get-version.outputs.version }}
+          name: Release v${{ steps.get-version.outputs.version }}
+          files: |
+            artifacts/mockey-patcher-v${{ steps.get-version.outputs.version }}.zip
+            artifacts/docker-compose.public.yml
+          generate_release_notes: true
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

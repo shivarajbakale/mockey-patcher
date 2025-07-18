@@ -8,11 +8,15 @@ The `build-chrome-extension.yml` workflow automatically builds and releases the 
 
 ### What it does:
 
-1. **Version Bumping**: Automatically increments the patch version of the Chrome extension (e.g., 0.0.1 → 0.0.2).
+1. **Version Detection**: Gets the current version from the Chrome extension's package.json file.
 2. **Building**: Builds the Chrome extension using the `yarn build:ship` command.
-3. **Artifact Creation**: Creates a zip file of the extension named `mockey-patcher-v{version}.zip`.
-4. **GitHub Release**: Creates a new GitHub release with the version tag and attaches the zip file.
-5. **Version Control**: Commits the version change back to the repository.
+3. **Artifact Creation**: Creates the following artifacts:
+   - A zip file of the extension named `mockey-patcher-v{version}.zip`
+   - Copies the `docker-compose.public.yml` file for easy access
+4. **Release Management**: Checks if a release with the current version tag already exists:
+   - If it exists, it deletes the old release
+   - Creates a new GitHub release with the version tag
+5. **Asset Attachment**: Attaches both the Chrome extension zip and docker-compose file to the release
 
 ### Triggering the workflow:
 
@@ -23,17 +27,20 @@ The workflow runs automatically when:
 
 ### Outputs:
 
-- A new commit with the updated version in `packages/chrome/package.json`
-- A new GitHub release with the tag `v{version}` (e.g., `v0.0.2`)
-- A downloadable zip file of the Chrome extension attached to the release
+- A GitHub release with the tag `v{version}` (e.g., `v0.0.1`)
+- Downloadable assets attached to the release:
+  - Chrome extension zip file: `mockey-patcher-v{version}.zip`
+  - Docker compose file: `docker-compose.public.yml`
 
 ### Permissions:
 
 The workflow requires `write` permissions to the repository contents to:
-- Push the version bump commit
-- Create a new release
+- Delete existing releases
+- Create new releases
+- Upload release assets
 
 ### Notes:
 
-- Only the patch version is incremented automatically (the third number in the version)
-- For major or minor version updates, you'll need to update the version manually 
+- The workflow uses the version specified in `packages/chrome/package.json`
+- To update the version, manually change it in the package.json file
+- The workflow will overwrite existing releases with the same version number 
