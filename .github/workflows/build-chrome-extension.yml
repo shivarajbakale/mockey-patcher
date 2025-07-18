@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - master
-      # Add any other branches you want to trigger this workflow
     paths:
       - 'packages/chrome/**'
       - '.github/workflows/build-chrome-extension.yml'
@@ -33,30 +32,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
         
-      - name: Bump version
-        id: bump-version
-        run: |
-          cd packages/chrome
-          
-          # Get current version
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
-          echo "Current version: $CURRENT_VERSION"
-          
-          # Split version into components
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
-          
-          # Increment patch version
-          NEW_PATCH=$((PATCH + 1))
-          NEW_VERSION="$MAJOR.$MINOR.$NEW_PATCH"
-          echo "New version: $NEW_VERSION"
-          
-          # Update package.json with new version
-          sed -i "s/\"version\": \"$CURRENT_VERSION\"/\"version\": \"$NEW_VERSION\"/" package.json
-          
-          # Set output for later steps
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "Version bumped from $CURRENT_VERSION to $NEW_VERSION"
-      
       - name: Build Chrome extension
         run: |
           cd packages/chrome
@@ -64,30 +39,11 @@ jobs:
           
       - name: Rename and move zip file
         run: |
-          VERSION=${{ steps.bump-version.outputs.new_version }}
           mkdir -p artifacts
-          cp packages/chrome/build/chrome-mv3-prod.zip artifacts/mockey-patcher-v$VERSION.zip
+          cp packages/chrome/build/chrome-mv3-prod.zip artifacts/mockey-patcher.zip
       
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: chrome-extension-v${{ steps.bump-version.outputs.new_version }}
-          path: artifacts/mockey-patcher-v${{ steps.bump-version.outputs.new_version }}.zip
-          
-      - name: Commit version change
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add packages/chrome/package.json
-          git commit -m "Bump version to ${{ steps.bump-version.outputs.new_version }}"
-          git push
-          
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: v${{ steps.bump-version.outputs.new_version }}
-          name: Release v${{ steps.bump-version.outputs.new_version }}
-          files: artifacts/mockey-patcher-v${{ steps.bump-version.outputs.new_version }}.zip
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+          name: chrome-extension
+          path: artifacts/mockey-patcher.zip 
