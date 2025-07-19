@@ -1,6 +1,8 @@
 [submodule "packages/backend"]
 	path = packages/backend
 	url = https://github.com/shivarajbakale/redirector-backend
+	branch = main
 [submodule "packages/chrome"]
 	path = packages/chrome
 	url = https://github.com/shivarajbakale/redirector-chrome
+	branch = main
