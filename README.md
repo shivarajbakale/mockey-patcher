@@ -95,24 +95,6 @@ redirector-app/
 └── package.json         # Root workspace configuration
 ```
 
-## 🔧 Available Scripts
-
-### Docker Commands (Recommended)
-- `yarn start:docker` - Start all services in Docker containers
-- `yarn logs` - View backend container logs
-- `yarn down` - Stop all Docker containers
-
-### Local Development
-- `yarn setup` - Complete setup with submodules
-- `yarn start` - Start with local backend
-- `yarn dev` - Development mode
-- `yarn build` - Build all packages
-
-### Submodule Management
-- `yarn submodule:init` - Initialize submodules
-- `yarn submodule:update` - Update submodules to latest
-- `yarn submodule:pull` - Pull latest changes
-
 ## 🛠️ Tech Stack
 
 - **Frontend**: React 18, TypeScript, Tailwind CSS
