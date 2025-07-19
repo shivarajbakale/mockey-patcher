@@ -6,8 +6,8 @@ A comprehensive Chrome extension with backend service for intelligent API reques
 
 1. **Set up the backend**
    - Install Docker and Docker Compose
-   - Download the [docker-compose.public.yml](https://github.com/shivarajbakale/mockey-patcher/releases/download/v1.0.0/docker-compose.public.yml) file from the Releases page
-   - Create a new directory for the project and place the downloaded file in it
+   - Use the [docker-compose.public.yml](https://github.com/shivarajbakale/mockey-patcher/releases/download/v0.0.1/docker-compose.public.yml) file from our latest release
+   - Create a new directory for the project and place the file in it
    - Set the environment variables:
      ```
      export BACKEND_PORT=3000
@@ -20,10 +20,10 @@ A comprehensive Chrome extension with backend service for intelligent API reques
    - Verify backend is running at http://localhost:3000
 
 2. **Install the Chrome Extension**
-   - Download the extension [chrome-mv3-prod.zip](https://github.com/shivarajbakale/mockey-patcher/releases/download/v1.0.0/chrome-mv3-prod.zip) from the Releases page
+   - Download the extension [mockey-patcher-v0.0.1.zip](https://github.com/shivarajbakale/mockey-patcher/releases/download/v0.0.1/mockey-patcher-v0.0.1.zip) from our latest release
    - Open Chrome and go to `chrome://extensions`
    - Enable "Developer mode"
-   - Drag and drop the downloaded .zip file into the extensions page
+   - Drag and drop the .zip file into the extensions page
    - Verify the extension icon appears in your toolbar
 
 3. **Configure the extension**
